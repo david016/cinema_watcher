@@ -26,6 +26,11 @@ Počet voľných miest:
   403 na požiadavky mimo prehliadača — bez ovládania reálneho prehliadača sa
   k mape sedadiel dostať nedá.
 
+  Z rovnakého dôvodu sa "Prostor pro invalidní vozík" nedá rozpoznať automaticky.
+  Počet týchto miest v sále sa zadáva ručne cez CINEMA_WHEELCHAIR a odpočíta sa
+  od voľných miest, takže hlásenia chodia len na reálne rezervovateľné sedadlá:
+      CINEMA_WHEELCHAIR='{"IMAX VOLVO": 4}'
+
 Ako spustiť jednorazovo:
     python3 cinema_watcher.py
 
@@ -95,6 +100,15 @@ HTTP_ATTEMPTS = int(os.environ.get("CINEMA_HTTP_ATTEMPTS", "3"))
 DEFAULT_CAPACITY = {"IMAX VOLVO": 384}
 CAPACITIES = dict(DEFAULT_CAPACITY)
 
+# Počet miest pre invalidný vozík ("Prostor pro invalidní vozík") v sále.
+# Tieto miesta sú síce v kapacite, ale bežne sa nepredávajú a pre normálnu
+# rezerváciu sú nepoužiteľné — preto sa odpočítavajú od počtu voľných miest.
+# API zloženie sedadiel nevracia (mapa sedadiel je len v rezervačnom systéme
+# za Cloudflare), takže sa to musí nastaviť ručne cez CINEMA_WHEELCHAIR,
+# napr.: CINEMA_WHEELCHAIR='{"IMAX VOLVO": 4}'
+DEFAULT_WHEELCHAIR = {"IMAX VOLVO": 6}
+WHEELCHAIR = dict(DEFAULT_WHEELCHAIR)
+
 HEADERS = {
     "User-Agent": "Mozilla/5.0 (compatible; cinema-watcher/1.0)",
     "Accept": "application/json",
@@ -139,18 +153,24 @@ def setup_logging(log_file: str, level: str):
             log.warning("Nepodarilo sa otvoriť log súbor %s: %s", log_file, e)
 
 
-def init_capacities():
-    """Načíta kapacity sál z CINEMA_CAPACITY (JSON) navrch predvolených hodnôt."""
-    raw = os.environ.get("CINEMA_CAPACITY", "").strip()
+def _load_int_map(env_name: str, target: dict, defaults: dict):
+    """Načíta mapu {sála: číslo} z premennej prostredia (JSON) navrch predvolených hodnôt."""
+    raw = os.environ.get(env_name, "").strip()
     if not raw:
         return
     try:
-        CAPACITIES.update({str(k): int(v) for k, v in json.loads(raw).items()})
-        log.debug("Kapacity sál po načítaní CINEMA_CAPACITY: %s", CAPACITIES)
+        target.update({str(k): int(v) for k, v in json.loads(raw).items()})
+        log.debug("%s načítané, výsledok: %s", env_name, target)
     except (json.JSONDecodeError, ValueError, TypeError, AttributeError) as e:
-        log.warning(
-            "CINEMA_CAPACITY sa nedá rozparsovať (%s), používam predvolené: %s", e, CAPACITIES
-        )
+        target.clear()
+        target.update(defaults)
+        log.warning("%s sa nedá rozparsovať (%s), používam predvolené: %s", env_name, e, target)
+
+
+def init_config():
+    """Načíta kapacity sál a počty miest pre vozík z premenných prostredia."""
+    _load_int_map("CINEMA_CAPACITY", CAPACITIES, DEFAULT_CAPACITY)
+    _load_int_map("CINEMA_WHEELCHAIR", WHEELCHAIR, DEFAULT_WHEELCHAIR)
 
 
 def free_seats_for(auditorium: str, ratio):
@@ -161,6 +181,12 @@ def free_seats_for(auditorium: str, ratio):
     if not capacity:
         return None
     return round(ratio * capacity)
+
+
+def bookable_seats(ev: dict):
+    """Voľné miesta bez miest pre vozík. Fallback na hrubý počet (staršie state.json)."""
+    value = ev.get("free_bookable")
+    return ev.get("free_seats") if value is None else value
 
 
 def dump_raw(url: str, raw: bytes, dump_dir: str):
@@ -328,6 +354,13 @@ def collect_current_events(dump_dir: str = ""):
             # (Overené: premietanie, kde nie je predaný ani jeden lístok, má 1.0.)
             ratio = ev.get("availabilityRatio")
 
+            free_total = free_seats_for(auditorium, ratio)
+            wheelchair = WHEELCHAIR.get(auditorium, 0)
+            # Predpoklad: miesta pre vozík sú vždy voľné (bežne sa nepredávajú).
+            # Ak by predsa boli obsadené, počet bežných miest tu vyjde nižší
+            # než v skutočnosti — radšej podhodnotiť ako hlásiť falošné voľné miesto.
+            free_bookable = None if free_total is None else max(0, free_total - wheelchair)
+
             entry = {
                 "film": film_name,
                 "date": date_str,
@@ -335,7 +368,9 @@ def collect_current_events(dump_dir: str = ""):
                 "auditorium": auditorium,
                 "sold_out": bool(ev.get("soldOut", False)),
                 "availability_ratio": ratio,
-                "free_seats": free_seats_for(auditorium, ratio),
+                "free_seats": free_total,          # vrátane miest pre vozík
+                "free_bookable": free_bookable,    # bežné miesta, na tie sa hlási
+                "wheelchair_seats": wheelchair,
                 "capacity": CAPACITIES.get(auditorium),
                 "booking_link": (
                     f"https://www.cinemacity.cz/cz/booking-router/launch/{event_id}?lang=cs"
@@ -343,9 +378,10 @@ def collect_current_events(dump_dir: str = ""):
             }
             current[event_id] = entry
             log.debug(
-                "  %s %s | %s | sála %s | vypredané=%s | ratio=%s | voľných=%s | id=%s",
+                "  %s %s | %s | sála %s | vypredané=%s | ratio=%s | voľných=%s "
+                "(z toho vozík %s) | bežných=%s | id=%s",
                 entry["date"], entry["time"], entry["film"], entry["auditorium"],
-                entry["sold_out"], ratio, entry["free_seats"], event_id,
+                entry["sold_out"], ratio, free_total, wheelchair, free_bookable, event_id,
             )
 
             if entry["capacity"] is None and auditorium not in unknown_halls:
@@ -380,9 +416,17 @@ def describe_seats(ev: dict) -> str:
     """Textový popis obsadenosti jedného premietania."""
     if ev.get("sold_out"):
         return "VYPREDANÉ"
+
     free = ev.get("free_seats")
     if free is not None:
-        return f"{free} voľných z {ev.get('capacity')}"
+        wheelchair = ev.get("wheelchair_seats") or 0
+        if not wheelchair:
+            return f"{free} voľných z {ev.get('capacity')}"
+        bookable = bookable_seats(ev)
+        if bookable == 0:
+            return f"0 bežných voľných (ostali len miesta pre vozík: {free})"
+        return f"{bookable} bežných voľných z {ev.get('capacity')} (+{free - bookable} pre vozík)"
+
     ratio = ev.get("availability_ratio")
     if ratio is not None:
         return f"{ratio:.1%} voľných (kapacita sály neznáma)"
@@ -403,12 +447,12 @@ def log_snapshot(current: dict):
             "  %s %s  %-24s sála %-12s %s",
             ev["date"], ev["time"], ev["film"], ev["auditorium"], describe_seats(ev),
         )
-        if ev.get("free_seats") is not None:
-            total_free += ev["free_seats"]
+        if bookable_seats(ev) is not None:
+            total_free += bookable_seats(ev)
             known += 1
 
     if known:
-        log.info("Spolu voľných miest: %d (v %d premietaniach)", total_free, known)
+        log.info("Spolu voľných bežných miest: %d (v %d premietaniach)", total_free, known)
 
 
 def diff_and_report(previous: dict, current: dict, alert_free: int = 1):
@@ -440,14 +484,22 @@ def diff_and_report(previous: dict, current: dict, alert_free: int = 1):
         old, new = previous[eid], current[eid]
         was_soldout = old["sold_out"]
         is_soldout = new["sold_out"]
-        old_free = old.get("free_seats")
-        new_free = new.get("free_seats")
+        # Hlásime len bežné miesta — miesta pre vozík sa ako "voľné" nerátajú.
+        old_free = bookable_seats(old)
+        new_free = bookable_seats(new)
 
         if was_soldout and not is_soldout:
-            report_lines.append(
-                f"🎟️ UVOĽNILI SA MIESTA: {new['film']} — {new['date']} {new['time']} "
-                f"(sála {new['auditorium']}, {describe_seats(new)}) -> {new['booking_link']}"
-            )
+            if new_free == 0:
+                # Odblokovali sa len miesta pre vozík — pre bežnú rezerváciu nič.
+                log.info(
+                    "Už nie je vypredané, ale voľné sú len miesta pre vozík: %s — %s %s (sála %s)",
+                    new["film"], new["date"], new["time"], new["auditorium"],
+                )
+            else:
+                report_lines.append(
+                    f"🎟️ UVOĽNILI SA MIESTA: {new['film']} — {new['date']} {new['time']} "
+                    f"(sála {new['auditorium']}, {describe_seats(new)}) -> {new['booking_link']}"
+                )
             continue
 
         if not was_soldout and is_soldout:
@@ -533,7 +585,7 @@ def main():
     args = parser.parse_args()
 
     setup_logging(args.log_file, args.log_level)
-    init_capacities()
+    init_config()
     log.debug(
         "Konfigurácia: CINEMA_ID=%s ATTR=%s LANG=%s DAYS_AHEAD=%s FILM_FILTER=%r STATE_FILE=%s LOG_FILE=%s",
         CINEMA_ID, ATTR, LANG, DAYS_AHEAD, FILM_NAME_FILTER, STATE_FILE, args.log_file,

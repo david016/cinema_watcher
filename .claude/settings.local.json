@@ -17,7 +17,11 @@
       "Bash(python -c ' *)",
       "Bash(rm -f __TRACKED_VAR__/t.json)",
       "Bash(CINEMA_STATE_FILE=__TRACKED_VAR__/t.json python cinema_watcher.py --log-file '')",
-      "Bash(CINEMA_STATE_FILE=__TRACKED_VAR__/t.json python cinema_watcher.py --log-file '' --no-list)"
+      "Bash(CINEMA_STATE_FILE=__TRACKED_VAR__/t.json python cinema_watcher.py --log-file '' --no-list)",
+      "Bash(rm -f __TRACKED_VAR__/w.json)",
+      "Bash(CINEMA_STATE_FILE=__TRACKED_VAR__/w.json python cinema_watcher.py --log-file '')",
+      "Bash(rm -f __TRACKED_VAR__/f.json)",
+      "Bash(CINEMA_STATE_FILE=__TRACKED_VAR__/f.json python cinema_watcher.py --log-file '')"
     ]
   }
 }
