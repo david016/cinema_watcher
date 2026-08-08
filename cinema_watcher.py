@@ -12,7 +12,19 @@ cinemacity.cz (rovnaké API, cez ktoré funguje aj samotná webová rezervácia)
        - NOVÝ TERMÍN  -> premietanie, ktoré tam predtým nebolo
        - VOĽNÉ MIESTA -> premietanie, ktoré bolo vypredané a teraz už nie je
          (typicky keď kino pridá kapacitu alebo niekto vráti lístky)
+       - PRIBUDLI VOĽNÉ MIESTA -> stúpol počet voľných miest (vrátené lístky)
        - ZRUŠENÝ TERMÍN -> premietanie, ktoré zmizlo z rozpisu
+
+Počet voľných miest:
+  API nevracia počet miest priamo, len `availabilityRatio`. Napriek názvu je to
+  podiel VOĽNÝCH miest (overené: premietanie bez jediného predaného lístka má 1.0).
+  Hodnoty sú vždy presné násobky 1/kapacita sály, takže sa z nich dá spätne
+  dopočítať počet voľných miest — pozri DEFAULT_CAPACITY / CINEMA_CAPACITY.
+
+  Konkrétne RADY A SEDADLÁ verejné API nevracia. Sú dostupné až v rezervačnom
+  systéme (tickets.rel.cinemacity.cz), ktorý je za Cloudflare ochranou a vracia
+  403 na požiadavky mimo prehliadača — bez ovládania reálneho prehliadača sa
+  k mape sedadiel dostať nedá.
 
 Ako spustiť jednorazovo:
     python3 cinema_watcher.py
@@ -75,6 +87,14 @@ DUMP_DIR = os.environ.get("CINEMA_DUMP_DIR", "")
 HTTP_TIMEOUT = int(os.environ.get("CINEMA_HTTP_TIMEOUT", "15"))
 HTTP_ATTEMPTS = int(os.environ.get("CINEMA_HTTP_ATTEMPTS", "3"))
 
+# Kapacity sál — potrebné na prepočet availabilityRatio na počet voľných miest.
+# API kapacitu priamo nevracia, ale availabilityRatio je vždy presný násobok
+# 1/kapacita (orezaný na 4 desatinné miesta), takže sa dá odvodiť:
+# pre IMAX VOLVO sedí 384 (odchýlka < 0,04 miesta na všetkých pozorovaných hodnotách).
+# Prepísať/doplniť sa dá cez CINEMA_CAPACITY, napr.: {"IMAX VOLVO": 384, "Sál 5": 120}
+DEFAULT_CAPACITY = {"IMAX VOLVO": 384}
+CAPACITIES = dict(DEFAULT_CAPACITY)
+
 HEADERS = {
     "User-Agent": "Mozilla/5.0 (compatible; cinema-watcher/1.0)",
     "Accept": "application/json",
@@ -117,6 +137,30 @@ def setup_logging(log_file: str, level: str):
             log.addHandler(file_handler)
         except OSError as e:
             log.warning("Nepodarilo sa otvoriť log súbor %s: %s", log_file, e)
+
+
+def init_capacities():
+    """Načíta kapacity sál z CINEMA_CAPACITY (JSON) navrch predvolených hodnôt."""
+    raw = os.environ.get("CINEMA_CAPACITY", "").strip()
+    if not raw:
+        return
+    try:
+        CAPACITIES.update({str(k): int(v) for k, v in json.loads(raw).items()})
+        log.debug("Kapacity sál po načítaní CINEMA_CAPACITY: %s", CAPACITIES)
+    except (json.JSONDecodeError, ValueError, TypeError, AttributeError) as e:
+        log.warning(
+            "CINEMA_CAPACITY sa nedá rozparsovať (%s), používam predvolené: %s", e, CAPACITIES
+        )
+
+
+def free_seats_for(auditorium: str, ratio):
+    """Prepočíta availabilityRatio na počet voľných miest. None = kapacita sály neznáma."""
+    if ratio is None:
+        return None
+    capacity = CAPACITIES.get(auditorium)
+    if not capacity:
+        return None
+    return round(ratio * capacity)
 
 
 def dump_raw(url: str, raw: bytes, dump_dir: str):
@@ -260,6 +304,7 @@ def collect_current_events(dump_dir: str = ""):
     skipped_by_filter = 0
     skipped_no_id = 0
     seen_films = set()
+    unknown_halls = set()
 
     for date_str in get_dates_with_screenings(dump_dir):
         events, films = get_events_for_date(date_str, dump_dir)
@@ -278,23 +323,38 @@ def collect_current_events(dump_dir: str = ""):
                 log.warning("Premietanie bez ID, preskakujem: %s", ev)
                 continue
 
+            auditorium = ev.get("auditorium", "?")
+            # POZOR: availabilityRatio = podiel VOĽNÝCH miest, nie obsadených.
+            # (Overené: premietanie, kde nie je predaný ani jeden lístok, má 1.0.)
+            ratio = ev.get("availabilityRatio")
+
             entry = {
                 "film": film_name,
                 "date": date_str,
                 "time": ev.get("eventDateTime", "")[11:16],  # HH:MM z ISO stringu
-                "auditorium": ev.get("auditorium", "?"),
+                "auditorium": auditorium,
                 "sold_out": bool(ev.get("soldOut", False)),
-                "availability_ratio": ev.get("availabilityRatio"),
+                "availability_ratio": ratio,
+                "free_seats": free_seats_for(auditorium, ratio),
+                "capacity": CAPACITIES.get(auditorium),
                 "booking_link": (
                     f"https://www.cinemacity.cz/cz/booking-router/launch/{event_id}?lang=cs"
                 ),
             }
             current[event_id] = entry
             log.debug(
-                "  %s %s | %s | sála %s | vypredané=%s | dostupnosť=%s | id=%s",
+                "  %s %s | %s | sála %s | vypredané=%s | ratio=%s | voľných=%s | id=%s",
                 entry["date"], entry["time"], entry["film"], entry["auditorium"],
-                entry["sold_out"], entry["availability_ratio"], event_id,
+                entry["sold_out"], ratio, entry["free_seats"], event_id,
             )
+
+            if entry["capacity"] is None and auditorium not in unknown_halls:
+                unknown_halls.add(auditorium)
+                log.warning(
+                    "Neznáma kapacita sály '%s' — počet voľných miest neviem prepočítať. "
+                    "Doplň ju cez CINEMA_CAPACITY, napr. CINEMA_CAPACITY='{\"%s\": 384}'",
+                    auditorium, auditorium,
+                )
 
     log.info(
         "Spolu %d sledovaných premietaní (filter filmu: %s; odfiltrované: %d; bez ID: %d).",
@@ -316,7 +376,42 @@ def collect_current_events(dump_dir: str = ""):
     return current
 
 
-def diff_and_report(previous: dict, current: dict):
+def describe_seats(ev: dict) -> str:
+    """Textový popis obsadenosti jedného premietania."""
+    if ev.get("sold_out"):
+        return "VYPREDANÉ"
+    free = ev.get("free_seats")
+    if free is not None:
+        return f"{free} voľných z {ev.get('capacity')}"
+    ratio = ev.get("availability_ratio")
+    if ratio is not None:
+        return f"{ratio:.1%} voľných (kapacita sály neznáma)"
+    return "obsadenosť neznáma"
+
+
+def log_snapshot(current: dict):
+    """Vypíše do logu aktuálny stav všetkých sledovaných premietaní."""
+    if not current:
+        return
+
+    log.info("--- Aktuálny stav (%d premietaní) ---", len(current))
+    total_free = 0
+    known = 0
+
+    for ev in sorted(current.values(), key=lambda e: (e["date"], e["time"])):
+        log.info(
+            "  %s %s  %-24s sála %-12s %s",
+            ev["date"], ev["time"], ev["film"], ev["auditorium"], describe_seats(ev),
+        )
+        if ev.get("free_seats") is not None:
+            total_free += ev["free_seats"]
+            known += 1
+
+    if known:
+        log.info("Spolu voľných miest: %d (v %d premietaniach)", total_free, known)
+
+
+def diff_and_report(previous: dict, current: dict, alert_free: int = 1):
     new_ids = set(current) - set(previous)
     removed_ids = set(previous) - set(current)
     common_ids = set(current) & set(previous)
@@ -332,7 +427,7 @@ def diff_and_report(previous: dict, current: dict):
         ev = current[eid]
         report_lines.append(
             f"🆕 NOVÝ TERMÍN: {ev['film']} — {ev['date']} {ev['time']} "
-            f"(sála {ev['auditorium']}) -> {ev['booking_link']}"
+            f"(sála {ev['auditorium']}, {describe_seats(ev)}) -> {ev['booking_link']}"
         )
 
     for eid in sorted(removed_ids, key=lambda i: (previous[i]["date"], previous[i]["time"])):
@@ -345,18 +440,40 @@ def diff_and_report(previous: dict, current: dict):
         old, new = previous[eid], current[eid]
         was_soldout = old["sold_out"]
         is_soldout = new["sold_out"]
+        old_free = old.get("free_seats")
+        new_free = new.get("free_seats")
+
         if was_soldout and not is_soldout:
             report_lines.append(
                 f"🎟️ UVOĽNILI SA MIESTA: {new['film']} — {new['date']} {new['time']} "
-                f"(sála {new['auditorium']}) -> {new['booking_link']}"
+                f"(sála {new['auditorium']}, {describe_seats(new)}) -> {new['booking_link']}"
             )
-        elif not was_soldout and is_soldout:
+            continue
+
+        if not was_soldout and is_soldout:
             log.info(
                 "Vypredalo sa: %s — %s %s (sála %s)",
                 new["film"], new["date"], new["time"], new["auditorium"],
             )
+            continue
+
+        # Pribudli voľné miesta (niekto vrátil lístky / kino uvoľnilo kapacitu).
+        if old_free is not None and new_free is not None:
+            delta = new_free - old_free
+            if delta >= alert_free:
+                report_lines.append(
+                    f"🎟️ PRIBUDLI VOĽNÉ MIESTA (+{delta}): {new['film']} — "
+                    f"{new['date']} {new['time']} (sála {new['auditorium']}, "
+                    f"{old_free} -> {new_free} voľných) -> {new['booking_link']}"
+                )
+            elif delta:
+                log.info(
+                    "Ubudli voľné miesta: %s — %s %s (sála %s): %d -> %d",
+                    new["film"], new["date"], new["time"], new["auditorium"],
+                    old_free, new_free,
+                )
         elif old.get("availability_ratio") != new.get("availability_ratio"):
-            log.debug(
+            log.info(
                 "Zmena dostupnosti: %s — %s %s: %s -> %s",
                 new["film"], new["date"], new["time"],
                 old.get("availability_ratio"), new.get("availability_ratio"),
@@ -365,7 +482,7 @@ def diff_and_report(previous: dict, current: dict):
     return report_lines
 
 
-def run_once(verbose_no_change=True, dump_dir=""):
+def run_once(verbose_no_change=True, dump_dir="", list_all=True, alert_free=1):
     """Jeden cyklus kontroly. Vráti True, ak prebehol úspešne."""
     started = time.monotonic()
     log.info("=== Štart kontroly (kino %s, atribút %s) ===", CINEMA_ID, ATTR)
@@ -386,7 +503,10 @@ def run_once(verbose_no_change=True, dump_dir=""):
         )
         return True
 
-    changes = diff_and_report(previous, current)
+    if list_all:
+        log_snapshot(current)
+
+    changes = diff_and_report(previous, current, alert_free=alert_free)
 
     if changes:
         log.info("--- ZMENY (%d) ---", len(changes))
@@ -408,9 +528,12 @@ def main():
     parser.add_argument("--log-file", default=LOG_FILE, help=f"Kam zapisovať log (default {LOG_FILE}); prázdne = len konzola")
     parser.add_argument("--log-level", default=LOG_LEVEL, choices=["DEBUG", "INFO", "WARNING", "ERROR"], help="Úroveň logovania (default INFO)")
     parser.add_argument("--dump-raw", default=DUMP_DIR, metavar="ADRESÁR", help="Ukladať surové JSON odpovede z API do tohto adresára")
+    parser.add_argument("--no-list", dest="list_all", action="store_false", help="Nevypisovať zoznam všetkých premietaní s voľnými miestami")
+    parser.add_argument("--alert-free", type=int, default=1, metavar="N", help="Hlásiť, keď pribudne aspoň N voľných miest (default 1)")
     args = parser.parse_args()
 
     setup_logging(args.log_file, args.log_level)
+    init_capacities()
     log.debug(
         "Konfigurácia: CINEMA_ID=%s ATTR=%s LANG=%s DAYS_AHEAD=%s FILM_FILTER=%r STATE_FILE=%s LOG_FILE=%s",
         CINEMA_ID, ATTR, LANG, DAYS_AHEAD, FILM_NAME_FILTER, STATE_FILE, args.log_file,
@@ -420,7 +543,12 @@ def main():
         log.info("Spúšťam sledovanie, interval %ss. Ukonči cez Ctrl+C.", args.interval)
         while True:
             try:
-                run_once(verbose_no_change=not args.quiet, dump_dir=args.dump_raw)
+                run_once(
+                    verbose_no_change=not args.quiet,
+                    dump_dir=args.dump_raw,
+                    list_all=args.list_all,
+                    alert_free=args.alert_free,
+                )
             except KeyboardInterrupt:
                 raise
             except Exception:
@@ -428,7 +556,12 @@ def main():
                 log.exception("Neočakávaná chyba počas kontroly, pokračujem ďalším cyklom.")
             time.sleep(args.interval)
     else:
-        ok = run_once(verbose_no_change=not args.quiet, dump_dir=args.dump_raw)
+        ok = run_once(
+            verbose_no_change=not args.quiet,
+            dump_dir=args.dump_raw,
+            list_all=args.list_all,
+            alert_free=args.alert_free,
+        )
         sys.exit(0 if ok else 1)
 
 

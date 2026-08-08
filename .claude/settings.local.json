@@ -5,7 +5,19 @@
       "Bash(CINEMA_STATE_FILE=__TRACKED_VAR__/test_state.json python cinema_watcher.py --log-file __TRACKED_VAR__/test.log --log-level DEBUG)",
       "Bash(rm -f __TRACKED_VAR__/test_state.json __TRACKED_VAR__/test.log)",
       "Bash(CINEMA_STATE_FILE=__TRACKED_VAR__/test_state.json python cinema_watcher.py --log-file __TRACKED_VAR__/test.log)",
-      "Bash(CINEMA_STATE_FILE=__TRACKED_VAR__/test_state.json python cinema_watcher.py --log-file '')"
+      "Bash(CINEMA_STATE_FILE=__TRACKED_VAR__/test_state.json python cinema_watcher.py --log-file '')",
+      "Bash(curl -s -o /dev/null -w \"%{http_code} %{size_download} %{redirect_url}\\\\n\" -H \"User-Agent: Mozilla/5.0\" \"https://tickets.cinemacity.cz/api/order/224526?lang=cs\")",
+      "Bash(curl -s -i -H \"User-Agent: Mozilla/5.0\" \"https://tickets.cinemacity.cz/api/order/224526?lang=cs\")",
+      "Bash(curl -s -H \"User-Agent: Mozilla/5.0\" \"https://tickets.cinemacity.cz/api/order/224526?lang=cs\" -o order.html)",
+      "Bash(grep -oE 'window.__NUXT__=.{0,600}' order.html)",
+      "Bash(curl -s -L -H \"User-Agent: Mozilla/5.0\" -w \"\\\\n=== final: %{url_effective} \\(%{http_code}\\) ===\\\\n\" -o launch.html \"https://www.cinemacity.cz/cz/booking-router/launch/224526?lang=cs\")",
+      "Bash(grep -oE 'https?://[a-zA-Z0-9./_?=&-]{10,120}' launch.html)",
+      "Bash(curl -s -L -c cookies.txt -H \"User-Agent: Mozilla/5.0\" -w \"\\\\n=== %{url_effective} \\(%{http_code}\\) %{size_download}B ===\\\\n\" -o rel.html \"https://tickets.rel.cinemacity.cz/api/order/224526?lang=cs\")",
+      "Bash(grep -oE 'https?://[a-zA-Z0-9./_?=&-]{10,140}' rel.html)",
+      "Bash(python -c ' *)",
+      "Bash(rm -f __TRACKED_VAR__/t.json)",
+      "Bash(CINEMA_STATE_FILE=__TRACKED_VAR__/t.json python cinema_watcher.py --log-file '')",
+      "Bash(CINEMA_STATE_FILE=__TRACKED_VAR__/t.json python cinema_watcher.py --log-file '' --no-list)"
     ]
   }
 }
