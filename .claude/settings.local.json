@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(python -m py_compile cinema_watcher.py)",
+      "Bash(CINEMA_STATE_FILE=__TRACKED_VAR__/test_state.json python cinema_watcher.py --log-file __TRACKED_VAR__/test.log --log-level DEBUG)",
+      "Bash(rm -f __TRACKED_VAR__/test_state.json __TRACKED_VAR__/test.log)",
+      "Bash(CINEMA_STATE_FILE=__TRACKED_VAR__/test_state.json python cinema_watcher.py --log-file __TRACKED_VAR__/test.log)",
+      "Bash(CINEMA_STATE_FILE=__TRACKED_VAR__/test_state.json python cinema_watcher.py --log-file '')"
+    ]
+  }
+}

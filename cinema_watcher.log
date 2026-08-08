@@ -1,0 +1,108 @@
+2026-08-08 16:03:57 [INFO   ] === Štart kontroly (kino 1052, atribút 70-mm) ===
+2026-08-08 16:03:57 [INFO   ] Stavový súbor C:\Users\david\Programovanie\2026\mojeProjekty\skripty\cinema_watcher_state.json zatiaľ neexistuje — beriem to ako prvý beh.
+2026-08-08 16:03:58 [INFO   ] GET https://www.cinemacity.cz/cz/data-api-service/v1/quickbook/10101/dates/in-cinema/1052/until/2026-10-07?attr=70-mm&lang=cs_CZ -> HTTP 200, 241 B, 94 ms
+2026-08-08 16:03:58 [INFO   ] API vrátilo 17 dní s premietaním (do 2026-10-07): ['2026-08-08', '2026-08-09', '2026-08-10', '2026-08-11', '2026-08-12', '2026-08-13', '2026-08-14', '2026-08-15', '2026-08-16', '2026-08-17', '2026-08-18', '2026-08-19', '2026-08-20', '2026-08-21', '2026-08-22', '2026-08-23', '2026-08-24']
+2026-08-08 16:03:58 [INFO   ] GET https://www.cinemacity.cz/cz/data-api-service/v1/quickbook/10101/film-events/in-cinema/1052/at-date/2026-08-08?attr=70-mm&lang=cs_CZ -> HTTP 200, 2229 B, 110 ms
+2026-08-08 16:03:58 [INFO   ] 2026-08-08: 2 premietaní, 1 filmov (Odyssea)
+2026-08-08 16:03:58 [INFO   ] GET https://www.cinemacity.cz/cz/data-api-service/v1/quickbook/10101/film-events/in-cinema/1052/at-date/2026-08-09?attr=70-mm&lang=cs_CZ -> HTTP 200, 4046 B, 282 ms
+2026-08-08 16:03:58 [INFO   ] 2026-08-09: 4 premietaní, 1 filmov (Odyssea)
+2026-08-08 16:03:58 [INFO   ] GET https://www.cinemacity.cz/cz/data-api-service/v1/quickbook/10101/film-events/in-cinema/1052/at-date/2026-08-10?attr=70-mm&lang=cs_CZ -> HTTP 200, 4045 B, 187 ms
+2026-08-08 16:03:58 [INFO   ] 2026-08-10: 4 premietaní, 1 filmov (Odyssea)
+2026-08-08 16:03:58 [INFO   ] GET https://www.cinemacity.cz/cz/data-api-service/v1/quickbook/10101/film-events/in-cinema/1052/at-date/2026-08-11?attr=70-mm&lang=cs_CZ -> HTTP 200, 4047 B, 78 ms
+2026-08-08 16:03:58 [INFO   ] 2026-08-11: 4 premietaní, 1 filmov (Odyssea)
+2026-08-08 16:03:58 [INFO   ] GET https://www.cinemacity.cz/cz/data-api-service/v1/quickbook/10101/film-events/in-cinema/1052/at-date/2026-08-12?attr=70-mm&lang=cs_CZ -> HTTP 200, 4047 B, 78 ms
+2026-08-08 16:03:58 [INFO   ] 2026-08-12: 4 premietaní, 1 filmov (Odyssea)
+2026-08-08 16:03:58 [INFO   ] GET https://www.cinemacity.cz/cz/data-api-service/v1/quickbook/10101/film-events/in-cinema/1052/at-date/2026-08-13?attr=70-mm&lang=cs_CZ -> HTTP 200, 4046 B, 172 ms
+2026-08-08 16:03:58 [INFO   ] 2026-08-13: 4 premietaní, 1 filmov (Odyssea)
+2026-08-08 16:03:59 [INFO   ] GET https://www.cinemacity.cz/cz/data-api-service/v1/quickbook/10101/film-events/in-cinema/1052/at-date/2026-08-14?attr=70-mm&lang=cs_CZ -> HTTP 200, 4047 B, 62 ms
+2026-08-08 16:03:59 [INFO   ] 2026-08-14: 4 premietaní, 1 filmov (Odyssea)
+2026-08-08 16:03:59 [INFO   ] GET https://www.cinemacity.cz/cz/data-api-service/v1/quickbook/10101/film-events/in-cinema/1052/at-date/2026-08-15?attr=70-mm&lang=cs_CZ -> HTTP 200, 4047 B, 94 ms
+2026-08-08 16:03:59 [INFO   ] 2026-08-15: 4 premietaní, 1 filmov (Odyssea)
+2026-08-08 16:03:59 [INFO   ] GET https://www.cinemacity.cz/cz/data-api-service/v1/quickbook/10101/film-events/in-cinema/1052/at-date/2026-08-16?attr=70-mm&lang=cs_CZ -> HTTP 200, 4047 B, 63 ms
+2026-08-08 16:03:59 [INFO   ] 2026-08-16: 4 premietaní, 1 filmov (Odyssea)
+2026-08-08 16:03:59 [INFO   ] GET https://www.cinemacity.cz/cz/data-api-service/v1/quickbook/10101/film-events/in-cinema/1052/at-date/2026-08-17?attr=70-mm&lang=cs_CZ -> HTTP 200, 4047 B, 78 ms
+2026-08-08 16:03:59 [INFO   ] 2026-08-17: 4 premietaní, 1 filmov (Odyssea)
+2026-08-08 16:03:59 [INFO   ] GET https://www.cinemacity.cz/cz/data-api-service/v1/quickbook/10101/film-events/in-cinema/1052/at-date/2026-08-18?attr=70-mm&lang=cs_CZ -> HTTP 200, 4045 B, 140 ms
+2026-08-08 16:03:59 [INFO   ] 2026-08-18: 4 premietaní, 1 filmov (Odyssea)
+2026-08-08 16:03:59 [INFO   ] GET https://www.cinemacity.cz/cz/data-api-service/v1/quickbook/10101/film-events/in-cinema/1052/at-date/2026-08-19?attr=70-mm&lang=cs_CZ -> HTTP 200, 4047 B, 63 ms
+2026-08-08 16:03:59 [INFO   ] 2026-08-19: 4 premietaní, 1 filmov (Odyssea)
+2026-08-08 16:03:59 [INFO   ] GET https://www.cinemacity.cz/cz/data-api-service/v1/quickbook/10101/film-events/in-cinema/1052/at-date/2026-08-20?attr=70-mm&lang=cs_CZ -> HTTP 200, 4047 B, 94 ms
+2026-08-08 16:03:59 [INFO   ] 2026-08-20: 4 premietaní, 1 filmov (Odyssea)
+2026-08-08 16:03:59 [INFO   ] GET https://www.cinemacity.cz/cz/data-api-service/v1/quickbook/10101/film-events/in-cinema/1052/at-date/2026-08-21?attr=70-mm&lang=cs_CZ -> HTTP 200, 4047 B, 93 ms
+2026-08-08 16:03:59 [INFO   ] 2026-08-21: 4 premietaní, 1 filmov (Odyssea)
+2026-08-08 16:03:59 [INFO   ] GET https://www.cinemacity.cz/cz/data-api-service/v1/quickbook/10101/film-events/in-cinema/1052/at-date/2026-08-22?attr=70-mm&lang=cs_CZ -> HTTP 200, 4047 B, 47 ms
+2026-08-08 16:03:59 [INFO   ] 2026-08-22: 4 premietaní, 1 filmov (Odyssea)
+2026-08-08 16:03:59 [INFO   ] GET https://www.cinemacity.cz/cz/data-api-service/v1/quickbook/10101/film-events/in-cinema/1052/at-date/2026-08-23?attr=70-mm&lang=cs_CZ -> HTTP 200, 4047 B, 62 ms
+2026-08-08 16:03:59 [INFO   ] 2026-08-23: 4 premietaní, 1 filmov (Odyssea)
+2026-08-08 16:03:59 [INFO   ] GET https://www.cinemacity.cz/cz/data-api-service/v1/quickbook/10101/film-events/in-cinema/1052/at-date/2026-08-24?attr=70-mm&lang=cs_CZ -> HTTP 200, 4047 B, 78 ms
+2026-08-08 16:03:59 [INFO   ] 2026-08-24: 4 premietaní, 1 filmov (Odyssea)
+2026-08-08 16:03:59 [INFO   ] Spolu 66 sledovaných premietaní (filter filmu: 'odys'; odfiltrované: 0; bez ID: 0).
+2026-08-08 16:03:59 [INFO   ] --- ZMENY (66) ---
+2026-08-08 16:03:59 [INFO   ] 🆕 NOVÝ TERMÍN: Odyssea — 2026-08-08 16:40 (sála IMAX VOLVO) -> https://www.cinemacity.cz/cz/booking-router/launch/220731?lang=cs
+2026-08-08 16:03:59 [INFO   ] 🆕 NOVÝ TERMÍN: Odyssea — 2026-08-08 20:30 (sála IMAX VOLVO) -> https://www.cinemacity.cz/cz/booking-router/launch/220732?lang=cs
+2026-08-08 16:03:59 [INFO   ] 🆕 NOVÝ TERMÍN: Odyssea — 2026-08-09 09:00 (sála IMAX VOLVO) -> https://www.cinemacity.cz/cz/booking-router/launch/220733?lang=cs
+2026-08-08 16:03:59 [INFO   ] 🆕 NOVÝ TERMÍN: Odyssea — 2026-08-09 12:50 (sála IMAX VOLVO) -> https://www.cinemacity.cz/cz/booking-router/launch/220734?lang=cs
+2026-08-08 16:03:59 [INFO   ] 🆕 NOVÝ TERMÍN: Odyssea — 2026-08-09 16:40 (sála IMAX VOLVO) -> https://www.cinemacity.cz/cz/booking-router/launch/220735?lang=cs
+2026-08-08 16:03:59 [INFO   ] 🆕 NOVÝ TERMÍN: Odyssea — 2026-08-09 20:30 (sála IMAX VOLVO) -> https://www.cinemacity.cz/cz/booking-router/launch/220736?lang=cs
+2026-08-08 16:03:59 [INFO   ] 🆕 NOVÝ TERMÍN: Odyssea — 2026-08-10 09:00 (sála IMAX VOLVO) -> https://www.cinemacity.cz/cz/booking-router/launch/224125?lang=cs
+2026-08-08 16:03:59 [INFO   ] 🆕 NOVÝ TERMÍN: Odyssea — 2026-08-10 12:50 (sála IMAX VOLVO) -> https://www.cinemacity.cz/cz/booking-router/launch/224126?lang=cs
+2026-08-08 16:03:59 [INFO   ] 🆕 NOVÝ TERMÍN: Odyssea — 2026-08-10 16:40 (sála IMAX VOLVO) -> https://www.cinemacity.cz/cz/booking-router/launch/224127?lang=cs
+2026-08-08 16:03:59 [INFO   ] 🆕 NOVÝ TERMÍN: Odyssea — 2026-08-10 20:30 (sála IMAX VOLVO) -> https://www.cinemacity.cz/cz/booking-router/launch/224128?lang=cs
+2026-08-08 16:03:59 [INFO   ] 🆕 NOVÝ TERMÍN: Odyssea — 2026-08-11 09:00 (sála IMAX VOLVO) -> https://www.cinemacity.cz/cz/booking-router/launch/224121?lang=cs
+2026-08-08 16:03:59 [INFO   ] 🆕 NOVÝ TERMÍN: Odyssea — 2026-08-11 12:50 (sála IMAX VOLVO) -> https://www.cinemacity.cz/cz/booking-router/launch/224122?lang=cs
+2026-08-08 16:03:59 [INFO   ] 🆕 NOVÝ TERMÍN: Odyssea — 2026-08-11 16:40 (sála IMAX VOLVO) -> https://www.cinemacity.cz/cz/booking-router/launch/224123?lang=cs
+2026-08-08 16:03:59 [INFO   ] 🆕 NOVÝ TERMÍN: Odyssea — 2026-08-11 20:30 (sála IMAX VOLVO) -> https://www.cinemacity.cz/cz/booking-router/launch/224124?lang=cs
+2026-08-08 16:03:59 [INFO   ] 🆕 NOVÝ TERMÍN: Odyssea — 2026-08-12 09:00 (sála IMAX VOLVO) -> https://www.cinemacity.cz/cz/booking-router/launch/224117?lang=cs
+2026-08-08 16:03:59 [INFO   ] 🆕 NOVÝ TERMÍN: Odyssea — 2026-08-12 12:50 (sála IMAX VOLVO) -> https://www.cinemacity.cz/cz/booking-router/launch/224118?lang=cs
+2026-08-08 16:03:59 [INFO   ] 🆕 NOVÝ TERMÍN: Odyssea — 2026-08-12 16:40 (sála IMAX VOLVO) -> https://www.cinemacity.cz/cz/booking-router/launch/224119?lang=cs
+2026-08-08 16:03:59 [INFO   ] 🆕 NOVÝ TERMÍN: Odyssea — 2026-08-12 20:30 (sála IMAX VOLVO) -> https://www.cinemacity.cz/cz/booking-router/launch/224120?lang=cs
+2026-08-08 16:03:59 [INFO   ] 🆕 NOVÝ TERMÍN: Odyssea — 2026-08-13 09:00 (sála IMAX VOLVO) -> https://www.cinemacity.cz/cz/booking-router/launch/224479?lang=cs
+2026-08-08 16:03:59 [INFO   ] 🆕 NOVÝ TERMÍN: Odyssea — 2026-08-13 12:50 (sála IMAX VOLVO) -> https://www.cinemacity.cz/cz/booking-router/launch/224480?lang=cs
+2026-08-08 16:03:59 [INFO   ] 🆕 NOVÝ TERMÍN: Odyssea — 2026-08-13 16:40 (sála IMAX VOLVO) -> https://www.cinemacity.cz/cz/booking-router/launch/224481?lang=cs
+2026-08-08 16:03:59 [INFO   ] 🆕 NOVÝ TERMÍN: Odyssea — 2026-08-13 20:30 (sála IMAX VOLVO) -> https://www.cinemacity.cz/cz/booking-router/launch/224482?lang=cs
+2026-08-08 16:03:59 [INFO   ] 🆕 NOVÝ TERMÍN: Odyssea — 2026-08-14 09:00 (sála IMAX VOLVO) -> https://www.cinemacity.cz/cz/booking-router/launch/224483?lang=cs
+2026-08-08 16:03:59 [INFO   ] 🆕 NOVÝ TERMÍN: Odyssea — 2026-08-14 12:50 (sála IMAX VOLVO) -> https://www.cinemacity.cz/cz/booking-router/launch/224484?lang=cs
+2026-08-08 16:03:59 [INFO   ] 🆕 NOVÝ TERMÍN: Odyssea — 2026-08-14 16:40 (sála IMAX VOLVO) -> https://www.cinemacity.cz/cz/booking-router/launch/224485?lang=cs
+2026-08-08 16:03:59 [INFO   ] 🆕 NOVÝ TERMÍN: Odyssea — 2026-08-14 20:30 (sála IMAX VOLVO) -> https://www.cinemacity.cz/cz/booking-router/launch/224486?lang=cs
+2026-08-08 16:03:59 [INFO   ] 🆕 NOVÝ TERMÍN: Odyssea — 2026-08-15 09:00 (sála IMAX VOLVO) -> https://www.cinemacity.cz/cz/booking-router/launch/224487?lang=cs
+2026-08-08 16:03:59 [INFO   ] 🆕 NOVÝ TERMÍN: Odyssea — 2026-08-15 12:50 (sála IMAX VOLVO) -> https://www.cinemacity.cz/cz/booking-router/launch/224488?lang=cs
+2026-08-08 16:03:59 [INFO   ] 🆕 NOVÝ TERMÍN: Odyssea — 2026-08-15 16:40 (sála IMAX VOLVO) -> https://www.cinemacity.cz/cz/booking-router/launch/224489?lang=cs
+2026-08-08 16:03:59 [INFO   ] 🆕 NOVÝ TERMÍN: Odyssea — 2026-08-15 20:30 (sála IMAX VOLVO) -> https://www.cinemacity.cz/cz/booking-router/launch/224490?lang=cs
+2026-08-08 16:03:59 [INFO   ] 🆕 NOVÝ TERMÍN: Odyssea — 2026-08-16 09:00 (sála IMAX VOLVO) -> https://www.cinemacity.cz/cz/booking-router/launch/224491?lang=cs
+2026-08-08 16:03:59 [INFO   ] 🆕 NOVÝ TERMÍN: Odyssea — 2026-08-16 12:50 (sála IMAX VOLVO) -> https://www.cinemacity.cz/cz/booking-router/launch/224492?lang=cs
+2026-08-08 16:03:59 [INFO   ] 🆕 NOVÝ TERMÍN: Odyssea — 2026-08-16 16:40 (sála IMAX VOLVO) -> https://www.cinemacity.cz/cz/booking-router/launch/224493?lang=cs
+2026-08-08 16:03:59 [INFO   ] 🆕 NOVÝ TERMÍN: Odyssea — 2026-08-16 20:30 (sála IMAX VOLVO) -> https://www.cinemacity.cz/cz/booking-router/launch/224494?lang=cs
+2026-08-08 16:03:59 [INFO   ] 🆕 NOVÝ TERMÍN: Odyssea — 2026-08-17 09:00 (sála IMAX VOLVO) -> https://www.cinemacity.cz/cz/booking-router/launch/224495?lang=cs
+2026-08-08 16:03:59 [INFO   ] 🆕 NOVÝ TERMÍN: Odyssea — 2026-08-17 12:50 (sála IMAX VOLVO) -> https://www.cinemacity.cz/cz/booking-router/launch/224496?lang=cs
+2026-08-08 16:03:59 [INFO   ] 🆕 NOVÝ TERMÍN: Odyssea — 2026-08-17 16:40 (sála IMAX VOLVO) -> https://www.cinemacity.cz/cz/booking-router/launch/224497?lang=cs
+2026-08-08 16:03:59 [INFO   ] 🆕 NOVÝ TERMÍN: Odyssea — 2026-08-17 20:30 (sála IMAX VOLVO) -> https://www.cinemacity.cz/cz/booking-router/launch/224498?lang=cs
+2026-08-08 16:03:59 [INFO   ] 🆕 NOVÝ TERMÍN: Odyssea — 2026-08-18 09:00 (sála IMAX VOLVO) -> https://www.cinemacity.cz/cz/booking-router/launch/224499?lang=cs
+2026-08-08 16:03:59 [INFO   ] 🆕 NOVÝ TERMÍN: Odyssea — 2026-08-18 12:50 (sála IMAX VOLVO) -> https://www.cinemacity.cz/cz/booking-router/launch/224500?lang=cs
+2026-08-08 16:03:59 [INFO   ] 🆕 NOVÝ TERMÍN: Odyssea — 2026-08-18 16:40 (sála IMAX VOLVO) -> https://www.cinemacity.cz/cz/booking-router/launch/224501?lang=cs
+2026-08-08 16:03:59 [INFO   ] 🆕 NOVÝ TERMÍN: Odyssea — 2026-08-18 20:30 (sála IMAX VOLVO) -> https://www.cinemacity.cz/cz/booking-router/launch/224502?lang=cs
+2026-08-08 16:03:59 [INFO   ] 🆕 NOVÝ TERMÍN: Odyssea — 2026-08-19 09:00 (sála IMAX VOLVO) -> https://www.cinemacity.cz/cz/booking-router/launch/224503?lang=cs
+2026-08-08 16:03:59 [INFO   ] 🆕 NOVÝ TERMÍN: Odyssea — 2026-08-19 12:50 (sála IMAX VOLVO) -> https://www.cinemacity.cz/cz/booking-router/launch/224504?lang=cs
+2026-08-08 16:03:59 [INFO   ] 🆕 NOVÝ TERMÍN: Odyssea — 2026-08-19 16:40 (sála IMAX VOLVO) -> https://www.cinemacity.cz/cz/booking-router/launch/224505?lang=cs
+2026-08-08 16:03:59 [INFO   ] 🆕 NOVÝ TERMÍN: Odyssea — 2026-08-19 20:30 (sála IMAX VOLVO) -> https://www.cinemacity.cz/cz/booking-router/launch/224506?lang=cs
+2026-08-08 16:03:59 [INFO   ] 🆕 NOVÝ TERMÍN: Odyssea — 2026-08-20 09:00 (sála IMAX VOLVO) -> https://www.cinemacity.cz/cz/booking-router/launch/224507?lang=cs
+2026-08-08 16:03:59 [INFO   ] 🆕 NOVÝ TERMÍN: Odyssea — 2026-08-20 12:50 (sála IMAX VOLVO) -> https://www.cinemacity.cz/cz/booking-router/launch/224508?lang=cs
+2026-08-08 16:03:59 [INFO   ] 🆕 NOVÝ TERMÍN: Odyssea — 2026-08-20 16:40 (sála IMAX VOLVO) -> https://www.cinemacity.cz/cz/booking-router/launch/224509?lang=cs
+2026-08-08 16:03:59 [INFO   ] 🆕 NOVÝ TERMÍN: Odyssea — 2026-08-20 20:30 (sála IMAX VOLVO) -> https://www.cinemacity.cz/cz/booking-router/launch/224510?lang=cs
+2026-08-08 16:03:59 [INFO   ] 🆕 NOVÝ TERMÍN: Odyssea — 2026-08-21 09:00 (sála IMAX VOLVO) -> https://www.cinemacity.cz/cz/booking-router/launch/224511?lang=cs
+2026-08-08 16:03:59 [INFO   ] 🆕 NOVÝ TERMÍN: Odyssea — 2026-08-21 12:50 (sála IMAX VOLVO) -> https://www.cinemacity.cz/cz/booking-router/launch/224512?lang=cs
+2026-08-08 16:03:59 [INFO   ] 🆕 NOVÝ TERMÍN: Odyssea — 2026-08-21 16:40 (sála IMAX VOLVO) -> https://www.cinemacity.cz/cz/booking-router/launch/224513?lang=cs
+2026-08-08 16:03:59 [INFO   ] 🆕 NOVÝ TERMÍN: Odyssea — 2026-08-21 20:30 (sála IMAX VOLVO) -> https://www.cinemacity.cz/cz/booking-router/launch/224514?lang=cs
+2026-08-08 16:03:59 [INFO   ] 🆕 NOVÝ TERMÍN: Odyssea — 2026-08-22 09:00 (sála IMAX VOLVO) -> https://www.cinemacity.cz/cz/booking-router/launch/224515?lang=cs
+2026-08-08 16:03:59 [INFO   ] 🆕 NOVÝ TERMÍN: Odyssea — 2026-08-22 12:50 (sála IMAX VOLVO) -> https://www.cinemacity.cz/cz/booking-router/launch/224516?lang=cs
+2026-08-08 16:03:59 [INFO   ] 🆕 NOVÝ TERMÍN: Odyssea — 2026-08-22 16:40 (sála IMAX VOLVO) -> https://www.cinemacity.cz/cz/booking-router/launch/224517?lang=cs
+2026-08-08 16:03:59 [INFO   ] 🆕 NOVÝ TERMÍN: Odyssea — 2026-08-22 20:30 (sála IMAX VOLVO) -> https://www.cinemacity.cz/cz/booking-router/launch/224518?lang=cs
+2026-08-08 16:03:59 [INFO   ] 🆕 NOVÝ TERMÍN: Odyssea — 2026-08-23 09:00 (sála IMAX VOLVO) -> https://www.cinemacity.cz/cz/booking-router/launch/224519?lang=cs
+2026-08-08 16:03:59 [INFO   ] 🆕 NOVÝ TERMÍN: Odyssea — 2026-08-23 12:50 (sála IMAX VOLVO) -> https://www.cinemacity.cz/cz/booking-router/launch/224520?lang=cs
+2026-08-08 16:03:59 [INFO   ] 🆕 NOVÝ TERMÍN: Odyssea — 2026-08-23 16:40 (sála IMAX VOLVO) -> https://www.cinemacity.cz/cz/booking-router/launch/224521?lang=cs
+2026-08-08 16:03:59 [INFO   ] 🆕 NOVÝ TERMÍN: Odyssea — 2026-08-23 20:30 (sála IMAX VOLVO) -> https://www.cinemacity.cz/cz/booking-router/launch/224522?lang=cs
+2026-08-08 16:03:59 [INFO   ] 🆕 NOVÝ TERMÍN: Odyssea — 2026-08-24 09:00 (sála IMAX VOLVO) -> https://www.cinemacity.cz/cz/booking-router/launch/224523?lang=cs
+2026-08-08 16:03:59 [INFO   ] 🆕 NOVÝ TERMÍN: Odyssea — 2026-08-24 12:50 (sála IMAX VOLVO) -> https://www.cinemacity.cz/cz/booking-router/launch/224524?lang=cs
+2026-08-08 16:03:59 [INFO   ] 🆕 NOVÝ TERMÍN: Odyssea — 2026-08-24 16:40 (sála IMAX VOLVO) -> https://www.cinemacity.cz/cz/booking-router/launch/224525?lang=cs
+2026-08-08 16:03:59 [INFO   ] 🆕 NOVÝ TERMÍN: Odyssea — 2026-08-24 20:30 (sála IMAX VOLVO) -> https://www.cinemacity.cz/cz/booking-router/launch/224526?lang=cs
+2026-08-08 16:03:59 [INFO   ] Stav uložený do C:\Users\david\Programovanie\2026\mojeProjekty\skripty\cinema_watcher_state.json (66 premietaní).
+2026-08-08 16:03:59 [INFO   ] === Kontrola hotová za 2.0s ===
