@@ -39,7 +39,19 @@
       "Bash(git mv *)",
       "Bash(sed -i 's#/mojeProjekty/skripty\";#/mojeProjekty/skripty/cinema_watcher\";#' C:/Users/david/AppData/Local/Temp/claude/C--Users-david-Programovanie-2026-mojeProjekty-skripty/6f4f9391-bb60-49a8-8f1a-e233e0a2f4ba/scratchpad/render_test.mjs)",
       "Bash(sed -i 's#/mojeProjekty/skripty/netlify#/mojeProjekty/skripty/cinema_watcher/netlify#g; s#skripty\";#skripty/cinema_watcher\";#' C:/Users/david/AppData/Local/Temp/claude/C--Users-david-Programovanie-2026-mojeProjekty-skripty/6f4f9391-bb60-49a8-8f1a-e233e0a2f4ba/scratchpad/fn_test.mjs)",
-      "Bash(node C:/Users/david/AppData/Local/Temp/claude/C--Users-david-Programovanie-2026-mojeProjekty-skripty/6f4f9391-bb60-49a8-8f1a-e233e0a2f4ba/scratchpad/render_test.mjs api)"
+      "Bash(node C:/Users/david/AppData/Local/Temp/claude/C--Users-david-Programovanie-2026-mojeProjekty-skripty/6f4f9391-bb60-49a8-8f1a-e233e0a2f4ba/scratchpad/render_test.mjs api)",
+      "Bash(gh secret *)",
+      "Bash(gh variable *)",
+      "Bash(gh run *)",
+      "PowerShell($c = Get-Command gh -ErrorAction SilentlyContinue; if \\($c\\) { $c.Source } else { \"gh not installed\" })",
+      "PowerShell($p = Get-Command python -ErrorAction SilentlyContinue; if \\($p\\) { \"$\\($p.Source\\)\"; python --version } else { \"python not on PATH\" })",
+      "PowerShell(.\\\\run-local.ps1 --quiet --no-list; \"--- exit: $LASTEXITCODE ---\"; Get-ChildItem local | Select-Object Name, Length)",
+      "Bash(git check-ignore *)",
+      "Bash(git ls-remote *)",
+      "Bash(git ls-tree *)",
+      "Bash(git add *)",
+      "Bash(git pull *)",
+      "Bash(git push *)"
     ]
   }
 }
