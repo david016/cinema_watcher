@@ -122,11 +122,13 @@
     </div>
     <div class="actions">
       <button id="reload" title="Znova stiahnuť dáta">Obnoviť</button>
+      <button id="pause" hidden>Pozastaviť sledovanie</button>
       <button id="check" class="primary" hidden>Skontrolovať teraz</button>
     </div>
   </header>
 
   <div class="banner err" id="err" hidden></div>
+  <div class="banner warn" id="paused" hidden></div>
   <div class="banner warn" id="stale" hidden></div>
   <div class="banner ok" id="note" hidden></div>
 
@@ -154,6 +156,7 @@
     statusEndpoint: "/api/status",
     dataUrl: "data/status.json",
     checkEndpoint: "/api/check",
+    toggleEndpoint: "/api/toggle",
     refreshSeconds: 60,
     staleAfterMinutes: 90,
   }, window.CINEMA_CONFIG || {});
@@ -171,6 +174,9 @@
   };
 
   let timer = null;
+  // Posledný známy stav workflowu (z /api/status). null = nevieme (napr. keď
+  // stránka číta len nasadený súbor) — vtedy sa tlačidlo pauzy nezobrazuje.
+  let workflowActive = null;
 
   function ago(iso) {
     if (!iso) return "neznáme";
@@ -190,7 +196,12 @@
         const res = await fetch(`${CFG.statusEndpoint}?${bust}`, { headers: { accept: "application/json" } });
         if (res.ok) {
           const payload = await res.json();
-          return { doc: payload.data || payload, run: payload.run || null, source: "api" };
+          return {
+            doc: payload.data || payload,
+            run: payload.run || null,
+            workflow: payload.workflow || null,
+            source: "api",
+          };
         }
       } catch (e) {
         // Funkcia nie je nasadená alebo nejde — skúsime súbor.
@@ -199,7 +210,7 @@
     const url = CFG.dataUrl + (CFG.dataUrl.includes("?") ? "&" : "?") + bust;
     const res = await fetch(url, { cache: "no-store" });
     if (!res.ok) throw new Error(`${url}: HTTP ${res.status}`);
-    return { doc: await res.json(), run: null, source: "file" };
+    return { doc: await res.json(), run: null, workflow: null, source: "file" };
   }
 
   function screeningRow(s) {
@@ -277,9 +288,43 @@
     box.innerHTML = rows.length ? rows.join("") : '<div class="empty">Zatiaľ žiadne zmeny.</div>';
   }
 
-  function render({ doc, run, source }) {
+  // Zosúladí tlačidlo pauzy a varovný pruh so stavom workflowu.
+  function renderWorkflowState(workflow) {
+    workflowActive = workflow ? workflow.active : null;
+
+    const pause = el("pause");
+    const paused = el("paused");
+    const check = el("check");
+
+    if (!CFG.toggleEndpoint || workflowActive === null) {
+      pause.hidden = true;
+      paused.hidden = true;
+      return;
+    }
+
+    pause.hidden = false;
+    pause.textContent = workflowActive ? "Pozastaviť sledovanie" : "Spustiť sledovanie";
+    pause.classList.toggle("primary", !workflowActive);
+
+    paused.hidden = workflowActive;
+    if (!workflowActive) {
+      paused.textContent = workflow.state === "disabled_inactivity"
+        ? "Sledovanie vypol GitHub sám po 60 dňoch bez aktivity v repozitári. " +
+          "Kým ho nespustíš, nechodia e-maily ani sa neaktualizuje rozpis."
+        : "Sledovanie je pozastavené — nechodia e-maily a rozpis sa neaktualizuje. " +
+          "Spustíš ho tlačidlom vyššie.";
+    }
+
+    // Vypnutý workflow neberie ani ručné spustenie, tak nech tlačidlo neklame.
+    check.disabled = !workflowActive;
+    check.title = workflowActive ? "" : "Najprv spusti sledovanie.";
+  }
+
+  function render({ doc, run, workflow, source }) {
     const cfg = doc.config || {};
     const totals = doc.totals || {};
+
+    renderWorkflowState(workflow);
 
     el("sub").innerHTML = `kino <code>${esc(cfg.cinema_id || "?")}</code> ·
       atribút <code>${esc(cfg.attr || "?")}</code> ·
@@ -303,7 +348,9 @@
 
     const stale = el("stale");
     const ageMin = doc.generated_at ? (Date.now() - new Date(doc.generated_at).getTime()) / 60000 : Infinity;
-    if (ageMin > CFG.staleAfterMinutes) {
+    // Keď je sledovanie pozastavené, staré dáta sú očakávané — hlási to už
+    // pruh vyššie a druhé varovanie by len mýlilo.
+    if (ageMin > CFG.staleAfterMinutes && workflowActive !== false) {
       stale.hidden = false;
       stale.textContent = `Dáta sú staré (${ago(doc.generated_at)}). ` +
         (source === "file"
@@ -337,15 +384,7 @@
     btn.disabled = true;
     btn.textContent = "Spúšťam…";
     try {
-      const stored = sessionStorage.getItem("cinemaPassword") || "";
-      let res = await postCheck(stored);
-      if (res.status === 401) {
-        const given = prompt("Heslo na spustenie kontroly:");
-        if (given) {
-          sessionStorage.setItem("cinemaPassword", given);
-          res = await postCheck(given);
-        }
-      }
+      const res = await withPassword(postCheck);
       const body = await res.json().catch(() => ({}));
       note.hidden = false;
       note.className = res.ok ? "banner ok" : "banner err";
@@ -365,23 +404,86 @@
       note.className = "banner err";
       note.textContent = `Spustenie zlyhalo: ${e.message}`;
     } finally {
-      btn.disabled = false;
+      // Pozor: medzitým sa mohlo sledovanie pozastaviť — vtedy má tlačidlo
+      // zostať zablokované.
+      btn.disabled = workflowActive === false;
       btn.textContent = "Skontrolovať teraz";
     }
   }
 
-  function postCheck(password) {
-    return fetch(CFG.checkEndpoint, {
+  function postJson(url, password, payload) {
+    return fetch(url, {
       method: "POST",
       headers: { "content-type": "application/json", ...(password ? { "x-trigger-password": password } : {}) },
-      body: JSON.stringify({}),
+      body: JSON.stringify(payload),
     });
+  }
+
+  function postCheck(password) {
+    return postJson(CFG.checkEndpoint, password, {});
+  }
+
+  // Spoločné pre obe tlačidlá: skús uložené heslo, pri 401 sa opýtaj a skús
+  // znova. Heslo drží sessionStorage, takže po zatvorení karty je preč.
+  async function withPassword(send) {
+    let res = await send(sessionStorage.getItem("cinemaPassword") || "");
+    if (res.status === 401) {
+      const given = prompt("Heslo:");
+      if (given) {
+        sessionStorage.setItem("cinemaPassword", given);
+        res = await send(given);
+      }
+    }
+    return res;
+  }
+
+  async function togglePause() {
+    const btn = el("pause");
+    const note = el("note");
+    const enable = workflowActive === false;
+
+    if (workflowActive && !confirm("Pozastaviť sledovanie? Kým ho nezapneš, nechodia žiadne e-maily.")) {
+      return;
+    }
+
+    const label = btn.textContent;
+    btn.disabled = true;
+    btn.textContent = enable ? "Spúšťam…" : "Pozastavujem…";
+    try {
+      const res = await withPassword((pw) => postJson(CFG.toggleEndpoint, pw, { enable }));
+      const body = await res.json().catch(() => ({}));
+      note.hidden = false;
+      note.className = res.ok ? "banner ok" : "banner err";
+      if (res.ok) {
+        note.textContent = enable
+          ? "Sledovanie spustené — ďalšia kontrola pobeží podľa rozvrhu."
+          : "Sledovanie pozastavené. Žiadne e-maily, kým ho znova nezapneš.";
+        renderWorkflowState(body.workflow);
+      } else if (res.status === 501) {
+        note.textContent = "Nie je nastavené — chýbajú GH_REPO / GH_TOKEN v Netlify.";
+      } else {
+        note.textContent = `Nepodarilo sa: ${body.detail || body.error || res.status}`;
+      }
+    } catch (e) {
+      note.hidden = false;
+      note.className = "banner err";
+      note.textContent = `Nepodarilo sa: ${e.message}`;
+    } finally {
+      btn.disabled = false;
+      // Ak sa stav zmenil, renderWorkflowState už dal správny popis.
+      if (btn.textContent.endsWith("…")) btn.textContent = label;
+    }
   }
 
   el("reload").addEventListener("click", refresh);
   if (CFG.checkEndpoint) {
     el("check").hidden = false;
     el("check").addEventListener("click", triggerCheck);
+  }
+  // Tlačidlo pauzy sa odkryje až keď /api/status povie, v akom stave workflow
+  // je — dovtedy by sa nedal zobraziť správny popis.
+  if (CFG.toggleEndpoint) {
+    el("pause").addEventListener("click", togglePause);
   }
 
   refresh();

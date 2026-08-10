@@ -41,6 +41,21 @@ export async function ghFetch(cfg, path, init = {}) {
   return res;
 }
 
+// Je sledovanie zapnuté? GitHub vie workflow "disablovať" — vtedy neplatí ani
+// cron, ani ručné spustenie. Stránka to potrebuje vedieť, aby vedela ukázať
+// správne tlačidlo (Pozastaviť / Spustiť) a nehlásila staré dáta ako poruchu.
+export async function workflowState(cfg) {
+  const res = await ghFetch(cfg, `/repos/${cfg.repo}/actions/workflows/${cfg.workflow}`);
+  if (!res.ok) return null;
+  const wf = await res.json();
+  return {
+    // active | disabled_manually | disabled_inactivity
+    // (to posledné si nastaví GitHub sám po 60 dňoch bez aktivity v repe)
+    state: wf.state,
+    active: wf.state === "active",
+  };
+}
+
 // Beží práve teraz kontrola? Nech stránka po kliknutí na tlačidlo vie povedať
 // "už to beží" namiesto spustenia druhého behu.
 export async function latestRun(cfg) {

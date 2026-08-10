@@ -6,7 +6,7 @@
 // Keď nie sú nastavené GH_REPO / GH_TOKEN, vráti 501 a stránka si vystačí
 // so súborom data/status.json nasadeným spolu s webom.
 
-import { ghConfig, ghFetch, json, latestRun } from "../lib/github.mjs";
+import { ghConfig, ghFetch, json, latestRun, workflowState } from "../lib/github.mjs";
 
 export default async () => {
   const cfg = ghConfig();
@@ -34,7 +34,9 @@ export default async () => {
     return json({ error: "bad_json", detail: String(e) }, 502);
   }
 
-  return json({ data, run: await latestRun(cfg) });
+  // Obe volania sú nezávislé — nech sa nečaká dvakrát za sebou.
+  const [run, workflow] = await Promise.all([latestRun(cfg), workflowState(cfg)]);
+  return json({ data, run, workflow });
 };
 
 export const config = { path: "/api/status" };

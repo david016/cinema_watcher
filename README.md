@@ -104,11 +104,15 @@ na sedadlá, ktoré sa nedajú normálne kúpiť (`CINEMA_WHEELCHAIR='{"IMAX VOL
 ```yaml
 on:
   schedule:
-    - cron: "*/30 6-21 * * *"
+    - cron: "*/10 5-9 * * 2"
+    - cron: "0 10 * * 2"
 ```
 
-**Cron je v UTC**, takže od pražského času odčítaj 2 h (v zime 1 h). Default
-znamená každých 30 minút medzi 08:00 a 23:30 pražského času.
+**Cron je v UTC**, takže od pražského času odčítaj 2 h (v zime 1 h). Nastavené
+je **utorok, každých 10 minút od 07:00 do 12:00** pražského času (leto) — prvý
+riadok pokrýva 07:00–11:50, druhý dorovná posledný beh o 12:00.
+
+Posledné pole je deň v týždni: `0`/`7` = nedeľa, `1` = pondelok, `2` = utorok.
 
 | Chcem | cron |
 |---|---|
@@ -116,6 +120,12 @@ znamená každých 30 minút medzi 08:00 a 23:30 pražského času.
 | každú hodinu | `0 * * * *` |
 | dvakrát denne 9:00 a 17:00 (leto) | `0 7,15 * * *` |
 | každých 10 minút len ráno 8–11 (leto) | `*/10 6-9 * * *` |
+| utorok + štvrtok, celý deň po 30 min | `*/30 * * * 2,4` |
+
+⚠️ **Zimný čas.** GitHub cron nepozná letný/zimný čas — je vždy v UTC. Koncom
+októbra sa Praha posunie na UTC+1 a tento rozvrh začne bežať 06:00–11:00. Ak to
+má zostať 07:00–12:00, posuň hodiny o jednu vyššie (`*/10 6-10 * * 2` a
+`0 11 * * 2`); v marci zase späť. Pripomienka je aj v komentári workflowu.
 
 Dva detaily GitHubu, s ktorými sa nedá nič robiť:
 
@@ -141,12 +151,23 @@ web/config.js       odkiaľ brať dáta, ako často obnovovať
 web/data/status.json  dáta z posledného behu (commituje workflow)
 netlify/functions/status.mjs  GET /api/status — načíta dáta priamo z GitHubu
 netlify/functions/check.mjs   POST /api/check — spustí workflow (tlačidlo)
+netlify/functions/toggle.mjs  POST /api/toggle — pozastaví / spustí sledovanie
 ```
 
-Stránka zobrazuje rozpis s voľnými miestami, súčty, históriu hlásení a tlačidlo
-**Skontrolovať teraz**, ktoré spustí workflow v GitHub Actions. Kontrola aj
-e-mail teda vždy prebehnú na GitHube — stránka sa nesnaží nič posielať sama
-(SMTP heslo by muselo byť v prehliadači, a to nechceme).
+Stránka zobrazuje rozpis s voľnými miestami, súčty, históriu hlásení a dve
+tlačidlá:
+
+* **Skontrolovať teraz** — spustí workflow v GitHub Actions mimo rozvrhu.
+* **Pozastaviť sledovanie** / **Spustiť sledovanie** — vypne, resp. zapne
+  workflow. Hodí sa, keď už lístky máš a nechceš ďalšie e-maily.
+
+Kontrola aj e-mail vždy prebehnú na GitHube — stránka sa nesnaží nič posielať
+sama (SMTP heslo by muselo byť v prehliadači, a to nechceme).
+
+⚠️ Pozastavený workflow neberie **ani cron, ani ručné spustenie**, takže kým je
+vypnutý, je tlačidlo *Skontrolovať teraz* neaktívne. Je to zámer: pauza má
+znamenať naozaj ticho, nie polovičný stav. Stránka to hlási žltým pruhom, aby
+sa staré dáta nedali pomýliť s poruchou.
 
 ### Nasadenie
 
@@ -160,7 +181,10 @@ e-mail teda vždy prebehnú na GitHube — stránka sa nesnaží nič posielať 
    | `GH_TOKEN` | GitHub PAT — fine-grained token na ten repo s právami *Actions: Read and write* a *Contents: Read-only* |
    | `GH_BRANCH` | `master` (ak máš inú hlavnú vetvu, uprav) |
    | `GH_WORKFLOW` | `cinema-watcher.yml` (default, netreba nastavovať) |
-   | `TRIGGER_PASSWORD` | voliteľné heslo pre tlačidlo — **bez neho môže kontrolu spustiť ktokoľvek, kto pozná URL** |
+   | `TRIGGER_PASSWORD` | heslo pre obe tlačidlá — **bez neho môže ktokoľvek s URL spustiť kontrolu aj vypnúť sledovanie** |
+
+   Tie isté premenné obsluhujú `/api/check` aj `/api/toggle`; token nepotrebuje
+   žiadne právo navyše, *Actions: Read and write* pokrýva spustenie aj vypnutie.
 3. Deploy. Hotovo.
 
 ### Dva režimy dát (a prečo to riešiť)

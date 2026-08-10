@@ -14,9 +14,17 @@ window.CINEMA_CONFIG = {
   // Prázdne = tlačidlo "Skontrolovať teraz" sa nezobrazí.
   checkEndpoint: "/api/check",
 
+  // Netlify funkcia, ktorá vie sledovanie pozastaviť a znova zapnúť.
+  // Prázdne = tlačidlo "Pozastaviť sledovanie" sa nezobrazí.
+  toggleEndpoint: "/api/toggle",
+
   // Ako často si stránka sama znova stiahne dáta (v sekundách; 0 = nikdy).
   refreshSeconds: 60,
 
   // Po koľkých minútach bez úspešnej kontroly považovať dáta za staré.
-  staleAfterMinutes: 90,
+  // MUSÍ sedieť s cronom vo workflowe: ten beží raz týždenne (utorok ráno),
+  // takže 8 dní = "vynechal sa celý jeden utorok, niečo je zle". Keby tu
+  // zostalo pôvodných 90 minút, stránka by šesť dní v týždni zbytočne
+  // strašila, že dáta sú staré. Pri častejšom crone toto číslo zmenš.
+  staleAfterMinutes: 8 * 24 * 60,
 };
