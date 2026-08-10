@@ -21,19 +21,35 @@ E-maily posiela **vždy skript** (na GitHube), nie stránka. Stránka je len vý
 
 Netreba nič inštalovať, stačí Python 3.8+ (žiadne závislosti mimo stdlib).
 
-```bash
-python cinema_watcher.py                      # jedna kontrola
-python cinema_watcher.py --watch --interval 600   # každých 10 minút
-python cinema_watcher.py --json-out web/data/status.json   # + dáta pre web
-python cinema_watcher.py --test-email         # overenie SMTP nastavenia
+```powershell
+.\run-local.ps1                            # jedna kontrola
+.\run-local.ps1 --watch --interval 600     # každých 10 minút
+.\run-local.ps1 --test-email               # overenie SMTP nastavenia
 ```
 
-Prvý beh si len založí stav (`cinema_watcher_state.json`) a e-mail nepošle —
-inak by prvý mail obsahoval všetkých ~56 termínov. Prepínač: `--mail-first-run`.
+**Používaj `run-local.ps1`, nie `python cinema_watcher.py` priamo.** Wrapper
+prepne stav a log do `local/` (mimo gitu). Priamy beh by písal do
+`cinema_watcher_state.json`, ktorý do repa commituje GitHub Actions — a to má
+dva nepríjemné následky: každý `git pull` by končil konfliktom a lokálny beh by
+„zjedol“ zmeny, teda označil ich za videné, takže beh na GitHube by o nich už
+nemal čo poslať mailom.
+
+Prvý beh si len založí stav a e-mail nepošle — inak by prvý mail obsahoval
+všetkých ~56 termínov. Prepínač: `--mail-first-run`.
 
 ### E-mail
 
-Nastav premenné prostredia (v PowerShellu `$env:SMTP_HOST = "..."`):
+Pre lokálne behy je najjednoduchšie založiť `local\.env` (je v .gitignore,
+`run-local.ps1` si ho načíta sám) s riadkami `KEY=value`:
+
+```
+SMTP_HOST=smtp.gmail.com
+SMTP_USER=ty@gmail.com
+SMTP_PASS=heslo-aplikacie
+MAIL_TO=ty@gmail.com
+```
+
+Alebo nastav premenné prostredia ručne (v PowerShelli `$env:SMTP_HOST = "..."`):
 
 | Premenná | Príklad | Poznámka |
 |---|---|---|

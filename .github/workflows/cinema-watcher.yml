@@ -12,12 +12,16 @@ name: Cinema watcher
 #   "0 * * * *"        -> každú celú hodinu
 #   "0 7,15 * * *"     -> dvakrát denne, 09:00 a 17:00 pražského času (leto)
 #
-# Pozor na dve vlastnosti GitHubu:
+# Pozor na tri vlastnosti GitHubu:
 #   - naplánované behy sa pri záťaži bežne oneskoria o 5–20 minút (a občas sa
 #     jeden vynechá), takže "presne o 9:00" negarantuje;
 #   - v repe bez aktivity GitHub po 60 dňoch cron vypne a pošle o tom mail —
 #     stačí ho znova zapnúť v záložke Actions (commity od tohto workflowu
-#     sa ako aktivita nepočítajú).
+#     sa ako aktivita nepočítajú);
+#   - GitHub hľadá workflowy v .github/workflows/ len pri pushi, a to iba keď
+#     sú Actions v tej chvíli zapnuté. Ak si ich zapol až dodatočne, workflow
+#     sa v záložke Actions neobjaví — treba pushnúť znova (stačí zmena v tomto
+#     súbore), inak o ňom GitHub nevie.
 # ---------------------------------------------------------------------------
 on:
   schedule:
