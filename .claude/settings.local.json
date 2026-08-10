@@ -35,7 +35,11 @@
       "Bash(node \"C:/Users/david/AppData/Local/Temp/claude/C--Users-david-Programovanie-2026-mojeProjekty-skripty/6f4f9391-bb60-49a8-8f1a-e233e0a2f4ba/scratchpad/render_test.mjs\" file)",
       "Bash(pip install *)",
       "Bash(git rm *)",
-      "Bash(gh auth *)"
+      "Bash(gh auth *)",
+      "Bash(git mv *)",
+      "Bash(sed -i 's#/mojeProjekty/skripty\";#/mojeProjekty/skripty/cinema_watcher\";#' C:/Users/david/AppData/Local/Temp/claude/C--Users-david-Programovanie-2026-mojeProjekty-skripty/6f4f9391-bb60-49a8-8f1a-e233e0a2f4ba/scratchpad/render_test.mjs)",
+      "Bash(sed -i 's#/mojeProjekty/skripty/netlify#/mojeProjekty/skripty/cinema_watcher/netlify#g; s#skripty\";#skripty/cinema_watcher\";#' C:/Users/david/AppData/Local/Temp/claude/C--Users-david-Programovanie-2026-mojeProjekty-skripty/6f4f9391-bb60-49a8-8f1a-e233e0a2f4ba/scratchpad/fn_test.mjs)",
+      "Bash(node C:/Users/david/AppData/Local/Temp/claude/C--Users-david-Programovanie-2026-mojeProjekty-skripty/6f4f9391-bb60-49a8-8f1a-e233e0a2f4ba/scratchpad/render_test.mjs api)"
     ]
   }
 }
