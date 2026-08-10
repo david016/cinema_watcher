@@ -1,0 +1,15 @@
+# Python
+__pycache__/
+*.py[cod]
+
+# Logy skriptu (v GitHub Actions beží s --log-file "", takže tam nevznikajú)
+cinema_watcher.log
+cinema_watcher.log.*
+
+# Surové odpovede z API (--dump-raw)
+dump/
+
+# Netlify / Node
+.netlify/
+node_modules/
+.env

@@ -21,7 +21,21 @@
       "Bash(rm -f __TRACKED_VAR__/w.json)",
       "Bash(CINEMA_STATE_FILE=__TRACKED_VAR__/w.json python cinema_watcher.py --log-file '')",
       "Bash(rm -f __TRACKED_VAR__/f.json)",
-      "Bash(CINEMA_STATE_FILE=__TRACKED_VAR__/f.json python cinema_watcher.py --log-file '')"
+      "Bash(CINEMA_STATE_FILE=__TRACKED_VAR__/f.json python cinema_watcher.py --log-file '')",
+      "Bash(cp cinema_watcher_state.json __TRACKED_VAR__/state.json)",
+      "Bash(CINEMA_STATE_FILE=__TRACKED_VAR__/state.json CINEMA_LOG_FILE='' python cinema_watcher.py --json-out __TRACKED_VAR__/status.json --no-list)",
+      "Bash(PYTHONPATH=C:/Users/david/Programovanie/2026/mojeProjekty/skripty python __TRACKED_VAR__/test_mail.py)",
+      "Bash(rm -rf \"C:/Users/david/Programovanie/2026/mojeParojekty\")",
+      "Read(//c/Users/david/Programovanie/2026/**)",
+      "Bash(python cinema_watcher.py --json-out web/data/status.json --log-file \"\" --no-list)",
+      "Bash(node --check web/config.js)",
+      "Bash(node --input-type=module -e \"await import\\('./netlify/functions/check.mjs'\\); await import\\('./netlify/functions/status.mjs'\\); console.log\\('functions import OK'\\)\")",
+      "Bash(python -)",
+      "Bash(node --check __TRACKED_VAR__/page.js)",
+      "Bash(node \"C:/Users/david/AppData/Local/Temp/claude/C--Users-david-Programovanie-2026-mojeProjekty-skripty/6f4f9391-bb60-49a8-8f1a-e233e0a2f4ba/scratchpad/render_test.mjs\" file)",
+      "Bash(pip install *)",
+      "Bash(git rm *)",
+      "Bash(gh auth *)"
     ]
   }
 }

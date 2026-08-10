@@ -1,0 +1,24 @@
+# Nasadenie stránky na Netlify.
+#   - žiadny build (statické HTML), publikuje sa obsah web/
+#   - serverless funkcie v netlify/functions/ (bez závislostí, čistý Node 18+)
+
+[build]
+  publish = "web"
+  functions = "netlify/functions"
+
+# Stránka berie dáta z /api/status (funkcia si ich vytiahne priamo z GitHubu),
+# takže commity so stavom nemusia spúšťať nový deploy. Toto pravidlo build
+# zruší (exit 0), keď sa zmenili len dáta.
+#
+# Ak funkcie NEPOUŽÍVAŠ a stránka má čítať nasadený súbor web/data/status.json,
+# celý riadok `ignore` zmaž — potom sa web nasadí pri každej zmene dát.
+  ignore = "git diff --quiet $CACHED_COMMIT_REF $COMMIT_REF -- web netlify netlify.toml ':(exclude)web/data'"
+
+[functions]
+  node_bundler = "esbuild"
+
+# JSON s dátami nikdy necachovať — inak stránka ukazuje starý rozpis.
+[[headers]]
+  for = "/data/*"
+  [headers.values]
+    Cache-Control = "no-store"

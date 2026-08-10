@@ -1,0 +1,136 @@
+name: Cinema watcher
+
+# ---------------------------------------------------------------------------
+# KEDY TO BEŽÍ
+#
+# Cron v GitHub Actions je vždy v UTC — Praha je UTC+2 (leto) / UTC+1 (zima),
+# takže od pražského času odčítaj 2 (v zime 1) hodiny.
+#
+# Príklady:
+#   "*/30 6-21 * * *"  -> každých 30 minút, 08:00–23:30 pražského času (leto)
+#   "*/15 * * * *"     -> každých 15 minút, non-stop (najkratší povolený krok je 5 min)
+#   "0 * * * *"        -> každú celú hodinu
+#   "0 7,15 * * *"     -> dvakrát denne, 09:00 a 17:00 pražského času (leto)
+#
+# Pozor na dve vlastnosti GitHubu:
+#   - naplánované behy sa pri záťaži bežne oneskoria o 5–20 minút (a občas sa
+#     jeden vynechá), takže "presne o 9:00" negarantuje;
+#   - v repe bez aktivity GitHub po 60 dňoch cron vypne a pošle o tom mail —
+#     stačí ho znova zapnúť v záložke Actions (commity od tohto workflowu
+#     sa ako aktivita nepočítajú).
+# ---------------------------------------------------------------------------
+on:
+  schedule:
+    - cron: "*/30 6-21 * * *"
+
+  # Ručné spustenie z GitHubu (Actions -> Cinema watcher -> Run workflow)
+  # aj z webovej stránky (Netlify funkcia netlify/functions/check.mjs).
+  workflow_dispatch:
+    inputs:
+      film_filter:
+        description: "Filter názvu filmu (prázdne = hodnota z nastavení repa)"
+        required: false
+        type: string
+      mail_on:
+        description: "Kedy poslať e-mail"
+        required: false
+        type: choice
+        default: tickets
+        options: [tickets, all, never]
+      test_email:
+        description: "Poslať len skúšobný e-mail (overenie SMTP) a skončiť"
+        required: false
+        type: boolean
+        default: false
+
+# Stav sa commituje do repa, takže dva behy naraz by si liezli do cesty.
+concurrency:
+  group: cinema-watcher
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    env:
+      # Nastavenia sledovania — meniteľné bez zásahu do kódu cez
+      # Settings -> Secrets and variables -> Actions -> Variables.
+      CINEMA_ID: ${{ vars.CINEMA_ID || '1052' }}
+      CINEMA_ATTR: ${{ vars.CINEMA_ATTR || '70-mm' }}
+      CINEMA_FILM_FILTER: ${{ inputs.film_filter || vars.CINEMA_FILM_FILTER || 'odys' }}
+      CINEMA_DAYS_AHEAD: ${{ vars.CINEMA_DAYS_AHEAD || '60' }}
+      CINEMA_CAPACITY: ${{ vars.CINEMA_CAPACITY }}
+      CINEMA_WHEELCHAIR: ${{ vars.CINEMA_WHEELCHAIR }}
+
+      # E-mail — patrí do Secrets (nie Variables), aj tá adresa.
+      SMTP_HOST: ${{ secrets.SMTP_HOST }}
+      SMTP_PORT: ${{ secrets.SMTP_PORT || '587' }}
+      SMTP_USER: ${{ secrets.SMTP_USER }}
+      SMTP_PASS: ${{ secrets.SMTP_PASS }}
+      SMTP_SECURITY: ${{ vars.SMTP_SECURITY || 'starttls' }}
+      MAIL_FROM: ${{ secrets.MAIL_FROM }}
+      MAIL_TO: ${{ secrets.MAIL_TO }}
+
+      # Voliteľné: build hook z Netlify (Site settings -> Build & deploy ->
+      # Build hooks). Treba len ak stránka číta nasadený súbor web/data/status.json
+      # namiesto /api/status — pozri README.
+      NETLIFY_BUILD_HOOK: ${{ secrets.NETLIFY_BUILD_HOOK }}
+
+      STATE_FILE: cinema_watcher_state.json
+      DATA_FILE: web/data/status.json
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      # Skript beží na čistej stdlib, takže niet čo inštalovať.
+      - name: Skúšobný e-mail
+        if: ${{ inputs.test_email }}
+        run: python cinema_watcher.py --test-email --log-file ""
+
+      - name: Kontrola premietaní
+        if: ${{ !inputs.test_email }}
+        run: |
+          python cinema_watcher.py \
+            --json-out "$DATA_FILE" \
+            --mail-on "${{ inputs.mail_on || vars.CINEMA_MAIL_ON || 'tickets' }}" \
+            --log-file ""
+
+      # Stav MUSÍ prežiť medzi behmi — bez neho by každý beh vyzeral ako prvý
+      # a nebolo by s čím porovnávať. Preto ho (aj dáta pre web) commitujeme
+      # späť do repa. Push cez GITHUB_TOKEN nespúšťa ďalšie workflowy,
+      # takže sa tým nedá vyrobiť nekonečná smyčka.
+      - name: Uložiť stav do repa
+        if: ${{ !inputs.test_email }}
+        run: |
+          if [ -z "$(git status --porcelain -- "$STATE_FILE" "$DATA_FILE")" ]; then
+            echo "Žiadna zmena stavu, netreba commitovať."
+            exit 0
+          fi
+
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add "$STATE_FILE" "$DATA_FILE"
+          git commit -m "chore(watcher): stav $(date -u '+%Y-%m-%d %H:%M UTC')"
+
+          # Medzitým mohol pribudnúť iný commit — skús rebase a push znova.
+          for attempt in 1 2 3; do
+            if git push; then
+              exit 0
+            fi
+            echo "Push zlyhal (pokus $attempt), skúšam rebase na origin/${GITHUB_REF_NAME}..."
+            git pull --rebase --autostash origin "${GITHUB_REF_NAME}" || exit 1
+          done
+          echo "Push sa nepodarilo ani po 3 pokusoch." >&2
+          exit 1
+
+      - name: Prebudiť Netlify build (voliteľné)
+        if: ${{ !inputs.test_email && env.NETLIFY_BUILD_HOOK != '' }}
+        run: curl -fsS -X POST -d '{}' "$NETLIFY_BUILD_HOOK" > /dev/null

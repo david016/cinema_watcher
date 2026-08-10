@@ -1,0 +1,395 @@
+<!doctype html>
+<html lang="sk">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<title>Cinema watcher — 70mm / IMAX</title>
+<style>
+  :root {
+    --bg: #f6f6f7;
+    --card: #ffffff;
+    --border: #e3e3e6;
+    --text: #16161a;
+    --muted: #6b6b73;
+    --accent: #c8102e;
+    --accent-soft: #fdecef;
+    --ok: #1c7a45;
+    --ok-soft: #e8f6ee;
+    --warn: #8a5a00;
+    --warn-soft: #fdf3e0;
+    --shadow: 0 1px 2px rgba(0, 0, 0, .06), 0 8px 24px rgba(0, 0, 0, .04);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #101013;
+      --card: #191a1f;
+      --border: #2b2c33;
+      --text: #ececf1;
+      --muted: #9a9aa5;
+      --accent: #ff4d6a;
+      --accent-soft: #2a1419;
+      --ok: #5fd28e;
+      --ok-soft: #14241b;
+      --warn: #e0b25e;
+      --warn-soft: #251d0e;
+      --shadow: none;
+    }
+  }
+
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--text);
+    font: 15px/1.5 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+  .wrap { max-width: 900px; margin: 0 auto; padding: 24px 16px 64px; }
+  a { color: inherit; }
+
+  header { display: flex; flex-wrap: wrap; gap: 12px; align-items: flex-start; justify-content: space-between; }
+  h1 { margin: 0; font-size: 22px; letter-spacing: -.01em; }
+  .sub { margin: 4px 0 0; color: var(--muted); font-size: 13px; }
+  .actions { display: flex; gap: 8px; flex-wrap: wrap; }
+
+  button {
+    font: inherit; font-weight: 600; cursor: pointer;
+    border: 1px solid var(--border); border-radius: 8px;
+    background: var(--card); color: var(--text);
+    padding: 9px 14px;
+  }
+  button:hover:not(:disabled) { border-color: var(--muted); }
+  button:disabled { opacity: .55; cursor: default; }
+  button.primary { background: var(--accent); border-color: var(--accent); color: #fff; }
+
+  .banner {
+    margin: 20px 0 0; padding: 11px 14px; border-radius: 8px; font-size: 14px;
+    border: 1px solid var(--border); background: var(--card);
+  }
+  .banner.warn { background: var(--warn-soft); border-color: transparent; color: var(--warn); }
+  .banner.err { background: var(--accent-soft); border-color: transparent; color: var(--accent); }
+  .banner.ok { background: var(--ok-soft); border-color: transparent; color: var(--ok); }
+  .banner[hidden] { display: none; }
+
+  .tiles { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px; margin: 20px 0 0; }
+  .tile { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 14px 16px; box-shadow: var(--shadow); }
+  .tile .n { font-size: 26px; font-weight: 700; letter-spacing: -.02em; }
+  .tile .l { color: var(--muted); font-size: 12px; text-transform: uppercase; letter-spacing: .04em; }
+  .tile.hit .n { color: var(--ok); }
+
+  h2 { font-size: 15px; margin: 32px 0 10px; text-transform: uppercase; letter-spacing: .05em; color: var(--muted); }
+
+  .card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; box-shadow: var(--shadow); overflow: hidden; }
+  .day { border-top: 1px solid var(--border); }
+  .day:first-child { border-top: 0; }
+  .day-h { padding: 10px 16px; font-weight: 700; font-size: 13px; background: color-mix(in srgb, var(--border) 35%, transparent); }
+  .row { display: flex; align-items: center; gap: 12px; padding: 11px 16px; border-top: 1px solid var(--border); flex-wrap: wrap; }
+  .row .t { font-variant-numeric: tabular-nums; font-weight: 700; min-width: 48px; }
+  .row .m { flex: 1 1 200px; min-width: 0; }
+  .row .film { font-size: 14px; }
+  .row .hall { color: var(--muted); font-size: 12px; }
+  .row .seats { font-size: 13px; color: var(--muted); white-space: nowrap; }
+  .row.free { background: var(--ok-soft); }
+  .row.free .seats { color: var(--ok); font-weight: 600; }
+  .row.sold .t, .row.sold .film { opacity: .55; }
+  .book {
+    text-decoration: none; font-weight: 600; font-size: 13px;
+    padding: 6px 11px; border-radius: 7px; border: 1px solid var(--border); white-space: nowrap;
+  }
+  .row.free .book { background: var(--accent); border-color: var(--accent); color: #fff; }
+
+  .ch { padding: 12px 16px; border-top: 1px solid var(--border); display: flex; gap: 12px; flex-wrap: wrap; align-items: baseline; }
+  .ch:first-child { border-top: 0; }
+  .ch .when { color: var(--muted); font-size: 12px; font-variant-numeric: tabular-nums; min-width: 108px; }
+  .ch .body { flex: 1 1 240px; }
+  .badge { display: inline-block; font-size: 11px; font-weight: 700; padding: 2px 7px; border-radius: 999px; text-transform: uppercase; letter-spacing: .04em; }
+  .badge.new { background: var(--accent-soft); color: var(--accent); }
+  .badge.freed, .badge.more { background: var(--ok-soft); color: var(--ok); }
+  .badge.removed { background: var(--warn-soft); color: var(--warn); }
+
+  .empty { padding: 20px 16px; color: var(--muted); }
+  footer { margin-top: 32px; color: var(--muted); font-size: 12px; }
+  code { font-size: 12px; background: color-mix(in srgb, var(--border) 45%, transparent); padding: 1px 5px; border-radius: 4px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div>
+      <h1>🎟️ Cinema watcher</h1>
+      <p class="sub" id="sub">Načítavam…</p>
+    </div>
+    <div class="actions">
+      <button id="reload" title="Znova stiahnuť dáta">Obnoviť</button>
+      <button id="check" class="primary" hidden>Skontrolovať teraz</button>
+    </div>
+  </header>
+
+  <div class="banner err" id="err" hidden></div>
+  <div class="banner warn" id="stale" hidden></div>
+  <div class="banner ok" id="note" hidden></div>
+
+  <div class="tiles" id="tiles" hidden>
+    <div class="tile"><div class="n" id="t-screenings">–</div><div class="l">premietaní</div></div>
+    <div class="tile" id="tile-free"><div class="n" id="t-free">–</div><div class="l">voľných miest</div></div>
+    <div class="tile"><div class="n" id="t-sold">–</div><div class="l">vypredaných</div></div>
+  </div>
+
+  <h2>Rozpis</h2>
+  <div class="card" id="list"><div class="empty">Načítavam…</div></div>
+
+  <h2>Posledné hlásenia</h2>
+  <div class="card" id="history"><div class="empty">Načítavam…</div></div>
+
+  <footer id="foot"></footer>
+</div>
+
+<script src="config.js"></script>
+<script>
+(() => {
+  "use strict";
+
+  const CFG = Object.assign({
+    statusEndpoint: "/api/status",
+    dataUrl: "data/status.json",
+    checkEndpoint: "/api/check",
+    refreshSeconds: 60,
+    staleAfterMinutes: 90,
+  }, window.CINEMA_CONFIG || {});
+
+  const el = (id) => document.getElementById(id);
+  const TZ = "Europe/Prague";
+  const fmtDay = new Intl.DateTimeFormat("sk-SK", { weekday: "long", day: "numeric", month: "long", timeZone: TZ });
+  const fmtStamp = new Intl.DateTimeFormat("sk-SK", { day: "2-digit", month: "2-digit", hour: "2-digit", minute: "2-digit", timeZone: TZ });
+
+  const KIND_LABEL = {
+    new: "Nový termín",
+    freed: "Uvoľnené miesta",
+    more: "Pribudli miesta",
+    removed: "Zrušený termín",
+  };
+
+  let timer = null;
+
+  function ago(iso) {
+    if (!iso) return "neznáme";
+    const mins = Math.round((Date.now() - new Date(iso).getTime()) / 60000);
+    if (mins < 1) return "práve teraz";
+    if (mins < 60) return `pred ${mins} min`;
+    const h = Math.floor(mins / 60);
+    if (h < 24) return `pred ${h} h`;
+    return `pred ${Math.floor(h / 24)} d`;
+  }
+
+  // Dáta sa berú z Netlify funkcie (vždy aktuálne), inak zo súboru pri webe.
+  async function loadData() {
+    const bust = `t=${Date.now()}`;
+    if (CFG.statusEndpoint) {
+      try {
+        const res = await fetch(`${CFG.statusEndpoint}?${bust}`, { headers: { accept: "application/json" } });
+        if (res.ok) {
+          const payload = await res.json();
+          return { doc: payload.data || payload, run: payload.run || null, source: "api" };
+        }
+      } catch (e) {
+        // Funkcia nie je nasadená alebo nejde — skúsime súbor.
+      }
+    }
+    const url = CFG.dataUrl + (CFG.dataUrl.includes("?") ? "&" : "?") + bust;
+    const res = await fetch(url, { cache: "no-store" });
+    if (!res.ok) throw new Error(`${url}: HTTP ${res.status}`);
+    return { doc: await res.json(), run: null, source: "file" };
+  }
+
+  function screeningRow(s) {
+    const free = s.free_bookable == null ? s.free_seats : s.free_bookable;
+    const hasFree = !s.sold_out && free > 0;
+    const cls = hasFree ? "row free" : (s.sold_out || free === 0 ? "row sold" : "row");
+    const link = s.booking_link
+      ? `<a class="book" href="${s.booking_link}" target="_blank" rel="noopener">${hasFree ? "Rezervovať" : "Detail"}</a>`
+      : "";
+    return `<div class="${cls}">
+      <div class="t">${s.time || "–"}</div>
+      <div class="m"><div class="film">${esc(s.film || "?")}</div><div class="hall">${esc(s.auditorium || "")}</div></div>
+      <div class="seats">${esc(s.seats || "")}</div>
+      ${link}
+    </div>`;
+  }
+
+  function esc(v) {
+    return String(v ?? "").replace(/[&<>"']/g, (c) => (
+      { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]
+    ));
+  }
+
+  function dayLabel(dateStr) {
+    const d = new Date(`${dateStr}T12:00:00`);
+    return isNaN(d) ? dateStr : `${fmtDay.format(d)} · ${dateStr}`;
+  }
+
+  function renderScreenings(doc) {
+    const list = el("list");
+    const items = (doc.screenings || []).slice().sort(
+      (a, b) => (a.date + a.time).localeCompare(b.date + b.time),
+    );
+    if (!items.length) {
+      list.innerHTML = '<div class="empty">Žiadne premietania — buď sa nič nehrá, alebo filter nesadol.</div>';
+      return;
+    }
+    const byDay = new Map();
+    for (const s of items) {
+      if (!byDay.has(s.date)) byDay.set(s.date, []);
+      byDay.get(s.date).push(s);
+    }
+    list.innerHTML = [...byDay.entries()].map(([date, rows]) => `
+      <section class="day">
+        <div class="day-h">${esc(dayLabel(date))}</div>
+        ${rows.map(screeningRow).join("")}
+      </section>`).join("");
+  }
+
+  function renderHistory(doc) {
+    const box = el("history");
+    const entries = doc.history || [];
+    if (!entries.length) {
+      box.innerHTML = '<div class="empty">Zatiaľ žiadne zmeny — odkedy sledovanie beží, nič nové nepribudlo.</div>';
+      return;
+    }
+    const rows = [];
+    for (const entry of entries.slice(0, 15)) {
+      for (const c of entry.changes || []) {
+        const label = KIND_LABEL[c.kind] || c.kind;
+        const delta = c.delta ? ` (+${c.delta})` : "";
+        const link = c.booking_link && c.kind !== "removed"
+          ? ` <a href="${c.booking_link}" target="_blank" rel="noopener">rezervovať →</a>`
+          : "";
+        rows.push(`<div class="ch">
+          <div class="when">${esc(fmtStamp.format(new Date(entry.at)))}</div>
+          <div class="body">
+            <span class="badge ${esc(c.kind)}">${esc(label)}${esc(delta)}</span>
+            ${esc(c.film || "")} — ${esc(c.date || "")} ${esc(c.time || "")}
+            <div class="hall">${esc(c.seats || "")}${link}</div>
+          </div>
+        </div>`);
+      }
+    }
+    box.innerHTML = rows.length ? rows.join("") : '<div class="empty">Zatiaľ žiadne zmeny.</div>';
+  }
+
+  function render({ doc, run, source }) {
+    const cfg = doc.config || {};
+    const totals = doc.totals || {};
+
+    el("sub").innerHTML = `kino <code>${esc(cfg.cinema_id || "?")}</code> ·
+      atribút <code>${esc(cfg.attr || "?")}</code> ·
+      filter filmu <code>${esc(cfg.film_filter || "žiadny")}</code><br>
+      kontrola ${esc(ago(doc.generated_at))}${run ? ` · workflow: ${esc(run.status)}${run.conclusion ? ` (${esc(run.conclusion)})` : ""}` : ""}`;
+
+    el("tiles").hidden = false;
+    el("t-screenings").textContent = totals.screenings ?? "–";
+    el("t-free").textContent = totals.free_bookable ?? "–";
+    el("t-sold").textContent = totals.sold_out ?? "–";
+    el("tile-free").classList.toggle("hit", (totals.free_bookable || 0) > 0);
+
+    const err = el("err");
+    if (doc.ok === false) {
+      err.hidden = false;
+      err.textContent = `Posledná kontrola zlyhala: ${doc.error || "neznáma chyba"}. ` +
+        `Zobrazený rozpis je z ${doc.last_ok_at ? fmtStamp.format(new Date(doc.last_ok_at)) : "predošlého behu"}.`;
+    } else {
+      err.hidden = true;
+    }
+
+    const stale = el("stale");
+    const ageMin = doc.generated_at ? (Date.now() - new Date(doc.generated_at).getTime()) / 60000 : Infinity;
+    if (ageMin > CFG.staleAfterMinutes) {
+      stale.hidden = false;
+      stale.textContent = `Dáta sú staré (${ago(doc.generated_at)}). ` +
+        (source === "file"
+          ? "Stránka číta súbor nasadený s webom — skontroluj, či beží workflow, prípadne nastav /api/status."
+          : "Skontroluj, či workflow v GitHub Actions naozaj beží.");
+    } else {
+      stale.hidden = true;
+    }
+
+    renderScreenings(doc);
+    renderHistory(doc);
+
+    el("foot").innerHTML = `Zdroj dát: ${source === "api" ? "GitHub (naživo)" : "súbor nasadený s webom"} ·
+      posledná zmena: ${doc.last_change_at ? esc(fmtStamp.format(new Date(doc.last_change_at))) : "—"} ·
+      e-maily posiela workflow, nie táto stránka`;
+  }
+
+  async function refresh() {
+    try {
+      render(await loadData());
+    } catch (e) {
+      const err = el("err");
+      err.hidden = false;
+      err.textContent = `Dáta sa nepodarilo načítať: ${e.message}`;
+    }
+  }
+
+  async function triggerCheck() {
+    const btn = el("check");
+    const note = el("note");
+    btn.disabled = true;
+    btn.textContent = "Spúšťam…";
+    try {
+      const stored = sessionStorage.getItem("cinemaPassword") || "";
+      let res = await postCheck(stored);
+      if (res.status === 401) {
+        const given = prompt("Heslo na spustenie kontroly:");
+        if (given) {
+          sessionStorage.setItem("cinemaPassword", given);
+          res = await postCheck(given);
+        }
+      }
+      const body = await res.json().catch(() => ({}));
+      note.hidden = false;
+      note.className = res.ok ? "banner ok" : "banner err";
+      if (res.ok && body.already_running) {
+        note.textContent = "Kontrola už beží — výsledky sa objavia do minúty.";
+      } else if (res.ok) {
+        note.textContent = "Kontrola spustená. Výsledky (a prípadný e-mail) prídu do 1–2 minút.";
+        setTimeout(refresh, 45000);
+        setTimeout(refresh, 90000);
+      } else if (res.status === 501) {
+        note.textContent = "Spúšťanie nie je nastavené — chýbajú GH_REPO / GH_TOKEN v Netlify.";
+      } else {
+        note.textContent = `Spustenie zlyhalo: ${body.detail || body.error || res.status}`;
+      }
+    } catch (e) {
+      note.hidden = false;
+      note.className = "banner err";
+      note.textContent = `Spustenie zlyhalo: ${e.message}`;
+    } finally {
+      btn.disabled = false;
+      btn.textContent = "Skontrolovať teraz";
+    }
+  }
+
+  function postCheck(password) {
+    return fetch(CFG.checkEndpoint, {
+      method: "POST",
+      headers: { "content-type": "application/json", ...(password ? { "x-trigger-password": password } : {}) },
+      body: JSON.stringify({}),
+    });
+  }
+
+  el("reload").addEventListener("click", refresh);
+  if (CFG.checkEndpoint) {
+    el("check").hidden = false;
+    el("check").addEventListener("click", triggerCheck);
+  }
+
+  refresh();
+  if (CFG.refreshSeconds > 0) {
+    timer = setInterval(() => { if (!document.hidden) refresh(); }, CFG.refreshSeconds * 1000);
+    document.addEventListener("visibilitychange", () => { if (!document.hidden) refresh(); });
+  }
+})();
+</script>
+</body>
+</html>
