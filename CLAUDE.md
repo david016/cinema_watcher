@@ -108,14 +108,19 @@ click fail.
 
 ### Scheduling gotchas
 
-Cron is **always UTC and has no DST**. The schedule is Tuesdays every 10 min,
-07:00–12:00 Prague, which needs two cron lines (`*/10 5-9 * * 2` stops at 11:50;
-`0 10 * * 2` adds noon). Corrected winter-time lines sit in a comment beside the
-schedule — bump both hours by one when the clocks change.
+The schedule is `0 * * * *` — hourly, every day. Because it pins neither an
+hour window nor a weekday, DST is a non-issue; that stops being true the moment
+someone puts concrete hours back, since cron is **always UTC and has no DST**.
 
-`staleAfterMinutes` in `web/config.js` must track the cron cadence. It is 8 days
-because the cron is weekly; a shorter value would show a false "data is stale"
-warning six days out of seven.
+**A denser cron does not buy denser checks.** GitHub throttles and silently
+drops scheduled runs: measured 2026-08-11, `*/10 5-9 * * 2` asked for 31 runs
+and got 7 — roughly one an hour, 3–34 min late. Hourly is about what actually
+gets delivered. Real sub-hourly cadence needs looping *inside* one job
+(`--watch --interval`, plus a raised `timeout-minutes`), not a shorter cron.
+
+`staleAfterMinutes` in `web/config.js` must track the cron cadence — currently
+180, i.e. two missed hourly runs. There is a fallback copy of the whole config
+in `web/index.html` (`Object.assign` defaults); keep the two in sync.
 
 Also: GitHub disables cron after 60 days of repo inactivity (the workflow's own
 commits don't count), and it only indexes `.github/workflows/` on push *while

@@ -104,35 +104,42 @@ na sedadlá, ktoré sa nedajú normálne kúpiť (`CINEMA_WHEELCHAIR='{"IMAX VOL
 ```yaml
 on:
   schedule:
-    - cron: "*/10 5-9 * * 2"
-    - cron: "0 10 * * 2"
+    - cron: "0 * * * *"
 ```
 
-**Cron je v UTC**, takže od pražského času odčítaj 2 h (v zime 1 h). Nastavené
-je **utorok, každých 10 minút od 07:00 do 12:00** pražského času (leto) — prvý
-riadok pokrýva 07:00–11:50, druhý dorovná posledný beh o 12:00.
+Nastavené je **každú celú hodinu, každý deň**. Tento rozvrh neobsahuje ani okno
+hodín, ani deň v týždni, takže sa ho **prechod na zimný čas netýka** — netreba
+ho dvakrát ročne posúvať.
 
-Posledné pole je deň v týždni: `0`/`7` = nedeľa, `1` = pondelok, `2` = utorok.
+**Cron je vždy v UTC**, takže len čo do rozvrhu vrátiš konkrétne hodiny, treba
+od pražského času odčítať 2 h (v zime 1 h). Posledné pole je deň v týždni:
+`0`/`7` = nedeľa, `1` = pondelok, `2` = utorok.
 
 | Chcem | cron |
 |---|---|
+| každú hodinu, non-stop | `0 * * * *` |
 | každých 15 minút, non-stop | `*/15 * * * *` |
-| každú hodinu | `0 * * * *` |
 | dvakrát denne 9:00 a 17:00 (leto) | `0 7,15 * * *` |
 | každých 10 minút len ráno 8–11 (leto) | `*/10 6-9 * * *` |
 | utorok + štvrtok, celý deň po 30 min | `*/30 * * * 2,4` |
 
-⚠️ **Zimný čas.** GitHub cron nepozná letný/zimný čas — je vždy v UTC. Koncom
-októbra sa Praha posunie na UTC+1 a tento rozvrh začne bežať 06:00–11:00. Ak to
-má zostať 07:00–12:00, posuň hodiny o jednu vyššie (`*/10 6-10 * * 2` a
-`0 11 * * 2`); v marci zase späť. Pripomienka je aj v komentári workflowu.
+⚠️ **Hustejší cron nezrýchli kontroly.** GitHub naplánované behy pri záťaži
+škrtí a potichu vynecháva — merané 11. 8. 2026: rozvrh `*/10 5-9 * * 2` žiadal
+31 behov, reálne zbehlo **7**, zhruba jeden za hodinu a s meškaním 3–34 minút.
+Hodina je teda približne to, čo GitHub naozaj stíha doručiť. Keď treba naozaj
+kratší interval, cron nepomôže — musí sa cykliť *vnútri* jedného behu
+(`cinema_watcher.py --watch --interval 600` a vyššie `timeout-minutes`).
 
-Dva detaily GitHubu, s ktorými sa nedá nič robiť:
+Ďalšie dva detaily GitHubu, s ktorými sa nedá nič robiť:
 
-* naplánované behy sa pri záťaži oneskoria o 5–20 minút, občas jeden vypadne —
-  na sledovanie lístkov to stačí, ale „presne o 9:00“ negarantuje;
+* aj mimo špičky sa beh bežne oneskorí o 5–20 minút — „presne o 9:00“
+  negarantuje;
 * ak v repe 60 dní nič nerobíš, GitHub cron **vypne** a pošle o tom mail; stačí
   ho v Actions znova zapnúť (commity od workflowu sa ako aktivita nepočítajú).
+
+Pri zmene cronu uprav aj `staleAfterMinutes` v `web/config.js` (teraz 180 minút
+= „vynechali sa dva behy po sebe“), inak bude stránka hlásiť staré dáta
+zbytočne — alebo naopak zamlčí, že sledovanie stojí.
 
 ### Prečo workflow commituje do repa
 

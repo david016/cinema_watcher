@@ -51,7 +51,14 @@
       "Bash(git ls-tree *)",
       "Bash(git add *)",
       "Bash(git pull *)",
-      "Bash(git push *)"
+      "Bash(git push *)",
+      "Bash(python *)",
+      "PowerShell(gh run list --workflow cinema-watcher.yml --limit 40 --json displayTitle,event,status,conclusion,createdAt | ConvertFrom-Json | Select-Object -First 40 createdAt,event,conclusion,displayTitle | Format-Table -AutoSize)",
+      "Bash(git fetch *)",
+      "Bash(sed -n 's/^\\\\\\([A-Za-z_][A-Za-z0-9_]*\\\\\\)=.*/\\\\1/p' local/.env)",
+      "Bash(command -v gh)",
+      "Read(//c/Program Files/GitHub CLI/**)",
+      "Bash(curl -sS https://api.github.com/repos/david016/cinema_watcher/actions/workflows/cinema-watcher.yml/runs?per_page=60 -o __TRACKED_VAR__/runs.json -w 'HTTP %{http_code}\\\\n')"
     ]
   }
 }
