@@ -137,9 +137,8 @@ kratší interval, cron nepomôže — musí sa cykliť *vnútri* jedného behu
 * ak v repe 60 dní nič nerobíš, GitHub cron **vypne** a pošle o tom mail; stačí
   ho v Actions znova zapnúť (commity od workflowu sa ako aktivita nepočítajú).
 
-Pri zmene cronu uprav aj `staleAfterMinutes` v `web/config.js` (teraz 180 minút
-= „vynechali sa dva behy po sebe“), inak bude stránka hlásiť staré dáta
-zbytočne — alebo naopak zamlčí, že sledovanie stojí.
+Pri zmene cronu netreba na stránke nič dolaďovať — stránka zámerne nevaruje, že
+sú dáta staré, len v hlavičke ukazuje čas poslednej kontroly.
 
 ### Prečo workflow commituje do repa
 

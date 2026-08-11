@@ -129,7 +129,6 @@
 
   <div class="banner err" id="err" hidden></div>
   <div class="banner warn" id="paused" hidden></div>
-  <div class="banner warn" id="stale" hidden></div>
   <div class="banner ok" id="note" hidden></div>
 
   <div class="tiles" id="tiles" hidden>
@@ -158,7 +157,6 @@
     checkEndpoint: "/api/check",
     toggleEndpoint: "/api/toggle",
     refreshSeconds: 60,
-    staleAfterMinutes: 180,
   }, window.CINEMA_CONFIG || {});
 
   const el = (id) => document.getElementById(id);
@@ -309,7 +307,7 @@
     paused.hidden = workflowActive;
     if (!workflowActive) {
       paused.textContent = workflow.state === "disabled_inactivity"
-        ? "Sledovanie vypol GitHub sám po 60 dňoch bez aktivity v repozitári. " +
+        ? "Sledovanie sa po dlhšej nečinnosti samo vyplo. " +
           "Kým ho nespustíš, nechodia e-maily ani sa neaktualizuje rozpis."
         : "Sledovanie je pozastavené — nechodia e-maily a rozpis sa neaktualizuje. " +
           "Spustíš ho tlačidlom vyššie.";
@@ -320,16 +318,22 @@
     check.title = workflowActive ? "" : "Najprv spusti sledovanie.";
   }
 
-  function render({ doc, run, workflow, source }) {
+  function render({ doc, workflow, source }) {
     const cfg = doc.config || {};
     const totals = doc.totals || {};
 
     renderWorkflowState(workflow);
 
+    // Namiesto varovania o starých dátach ukazujeme len holý čas poslednej
+    // kontroly — nech si každý sám povie, či je to preňho dosť čerstvé.
+    const checkedAt = doc.generated_at
+      ? `${esc(fmtStamp.format(new Date(doc.generated_at)))} (${esc(ago(doc.generated_at))})`
+      : "zatiaľ neprebehla";
+
     el("sub").innerHTML = `kino <code>${esc(cfg.cinema_id || "?")}</code> ·
       atribút <code>${esc(cfg.attr || "?")}</code> ·
       filter filmu <code>${esc(cfg.film_filter || "žiadny")}</code><br>
-      kontrola ${esc(ago(doc.generated_at))}${run ? ` · workflow: ${esc(run.status)}${run.conclusion ? ` (${esc(run.conclusion)})` : ""}` : ""}`;
+      posledná kontrola: ${checkedAt}`;
 
     el("tiles").hidden = false;
     el("t-screenings").textContent = totals.screenings ?? "–";
@@ -346,26 +350,12 @@
       err.hidden = true;
     }
 
-    const stale = el("stale");
-    const ageMin = doc.generated_at ? (Date.now() - new Date(doc.generated_at).getTime()) / 60000 : Infinity;
-    // Keď je sledovanie pozastavené, staré dáta sú očakávané — hlási to už
-    // pruh vyššie a druhé varovanie by len mýlilo.
-    if (ageMin > CFG.staleAfterMinutes && workflowActive !== false) {
-      stale.hidden = false;
-      stale.textContent = `Dáta sú staré (${ago(doc.generated_at)}). ` +
-        (source === "file"
-          ? "Stránka číta súbor nasadený s webom — skontroluj, či beží workflow, prípadne nastav /api/status."
-          : "Skontroluj, či workflow v GitHub Actions naozaj beží.");
-    } else {
-      stale.hidden = true;
-    }
-
     renderScreenings(doc);
     renderHistory(doc);
 
-    el("foot").innerHTML = `Zdroj dát: ${source === "api" ? "GitHub (naživo)" : "súbor nasadený s webom"} ·
+    el("foot").innerHTML = `Zdroj dát: ${source === "api" ? "naživo" : "uložená kópia"} ·
       posledná zmena: ${doc.last_change_at ? esc(fmtStamp.format(new Date(doc.last_change_at))) : "—"} ·
-      e-maily posiela workflow, nie táto stránka`;
+      e-maily chodia automaticky, táto stránka ich neposiela`;
   }
 
   async function refresh() {

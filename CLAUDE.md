@@ -118,9 +118,14 @@ and got 7 — roughly one an hour, 3–34 min late. Hourly is about what actuall
 gets delivered. Real sub-hourly cadence needs looping *inside* one job
 (`--watch --interval`, plus a raised `timeout-minutes`), not a shorter cron.
 
-`staleAfterMinutes` in `web/config.js` must track the cron cadence — currently
-180, i.e. two missed hourly runs. There is a fallback copy of the whole config
-in `web/index.html` (`Object.assign` defaults); keep the two in sync.
+The page deliberately has **no "data is stale" warning** — the header shows the
+bare timestamp of the last check and lets the reader judge. So no page setting
+has to track the cron cadence when you change it. Don't reintroduce a staleness
+threshold without asking: the site is shown to other people, and a red banner
+about a watcher they don't run is noise to them.
+
+For the same reason, user-visible text avoids GitHub/workflow vocabulary. Keep
+plumbing terms in the owner-facing setup-error paths only.
 
 Also: GitHub disables cron after 60 days of repo inactivity (the workflow's own
 commits don't count), and it only indexes `.github/workflows/` on push *while

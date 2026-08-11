@@ -21,10 +21,7 @@ window.CINEMA_CONFIG = {
   // Ako často si stránka sama znova stiahne dáta (v sekundách; 0 = nikdy).
   refreshSeconds: 60,
 
-  // Po koľkých minútach bez úspešnej kontroly považovať dáta za staré.
-  // MUSÍ sedieť s cronom vo workflowe: ten beží každú hodinu, takže 3 hodiny
-  // = "vynechali sa dva behy po sebe, niečo je zle". Tesnejšie číslo (napr. 90
-  // minút) by strašilo zbytočne — GitHub naplánované behy bežne oneskorí
-  // o 5–20 minút a občas jeden úplne vynechá. Pri zmene cronu uprav aj toto.
-  staleAfterMinutes: 180,
+  // Pozn.: stránka zámerne nevaruje, že sú dáta staré — v hlavičke je len čas
+  // poslednej kontroly a nech si každý sám povie, či mu to stačí. Preto tu už
+  // nie je `staleAfterMinutes`; pri zmene cronu netreba nič dolaďovať.
 };
