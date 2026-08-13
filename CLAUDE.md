@@ -73,17 +73,15 @@ are easy to break:
 2. **Deployed file fallback** — the page reads `data/status.json` shipped with
    the site. Used automatically when the function is missing or errors.
 
-The *Podpora* card holds a payment QR (SPAYD / Czech QR platba) as an **inline
-SVG between `<!-- QR-START -->` / `<!-- QR-END -->` in `web/index.html`**. Don't
-hand-edit that path — regenerate it:
+The *Podpora* card sits in a sticky side column next to the schedule and holds a
+payment QR for voluntary contributions. **The QR is a static image
+(`web/qr.jpeg`) exported from the owner's banking app** — do not try to generate
+it. A hand-written SPAYD encoder was tried and produced a QR that banking apps
+refused; the export is authoritative and needs no code. To change the account or
+amount, export a new QR and replace the file.
 
-```powershell
-python tools\make_support_qr.py --iban CZ6230300000001797621019 --amount 25
-```
-
-`tools/make_support_qr.py` is a self-contained QR encoder (stdlib only, byte
-mode, EC level M, versions 1–10), written because the page must stay one static
-dependency-free file — no CDN QR library, no external image generator.
+`images/` at the repo root is not published — Netlify serves `web/`, so the file
+has to live there.
 
 `netlify.toml` has an `ignore` rule that cancels the build when *only*
 `web/data` changed. Without it, the workflow's state commits would each trigger
