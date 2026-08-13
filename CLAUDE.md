@@ -155,6 +155,14 @@ yields empty seat counts.
 Email fires on change kinds `new` / `freed` / `more` (`TICKET_KINDS`); a
 `removed` screening alone does not, unless `--mail-on all`.
 
+**The API's `soldOut` flag is effectively never true** — measured 2026-08-13, 0
+of 100 screenings had it set, while 35 had only the 6 wheelchair spaces left. So
+a screening that cannot be bought shows up as `free_bookable == 0`, not as
+`sold_out`. `totals` therefore carries both `sold_out` (the API flag) and
+`wheelchair_only` (bookable 0, some seats left); the page's third tile adds them
+and shows the split in brackets. Counting only `sold_out` would report 0
+unbuyable screenings out of 35.
+
 ## Conventions
 
 - **Code comments, docstrings, log messages, README, and all UI text are in

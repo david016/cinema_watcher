@@ -76,6 +76,8 @@
   .tile { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 14px 16px; box-shadow: var(--shadow); }
   .tile .n { font-size: 26px; font-weight: 700; letter-spacing: -.02em; }
   .tile .l { color: var(--muted); font-size: 12px; text-transform: uppercase; letter-spacing: .04em; }
+  .tile .b { color: var(--muted); font-size: 12px; margin-top: 3px; }
+  .tile .b:empty { display: none; }
   .tile.hit .n { color: var(--ok); }
 
   h2 { font-size: 15px; margin: 32px 0 10px; text-transform: uppercase; letter-spacing: .05em; color: var(--muted); }
@@ -145,7 +147,7 @@
   <div class="tiles" id="tiles" hidden>
     <div class="tile"><div class="n" id="t-screenings">–</div><div class="l">premietaní</div></div>
     <div class="tile" id="tile-free"><div class="n" id="t-free">–</div><div class="l">voľných miest</div></div>
-    <div class="tile"><div class="n" id="t-sold">–</div><div class="l">vypredaných</div></div>
+    <div class="tile"><div class="n" id="t-sold">–</div><div class="l">nedostupných</div><div class="b" id="t-sold-b"></div></div>
   </div>
 
   <div class="cols">
@@ -364,7 +366,15 @@
     el("tiles").hidden = false;
     el("t-screenings").textContent = totals.screenings ?? "–";
     el("t-free").textContent = totals.free_bookable ?? "–";
-    el("t-sold").textContent = totals.sold_out ?? "–";
+    // "Vypredané" podľa API a "ostali len miesta pre vozík" sú z pohľadu
+    // kupujúceho to isté, tak sa sčítajú a rozpad ide do zátvorky. Staršie
+    // dáta wheelchair_only nemajú — vtedy sa zátvorka nezobrazí.
+    const soldOut = totals.sold_out;
+    const chairOnly = totals.wheelchair_only;
+    el("t-sold").textContent = soldOut == null ? "–" : soldOut + (chairOnly ?? 0);
+    el("t-sold-b").textContent = chairOnly == null
+      ? ""
+      : `(${soldOut} úplne · ${chairOnly} len vozík)`;
     el("tile-free").classList.toggle("hit", (totals.free_bookable || 0) > 0);
 
     const err = el("err");

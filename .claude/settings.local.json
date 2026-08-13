@@ -62,7 +62,10 @@
       "Bash(node --check web/.check.mjs)",
       "Bash(rm -f web/.check.mjs)",
       "Bash(git commit *)",
-      "Bash(git rev-list *)"
+      "Bash(git rev-list *)",
+      "Bash(node --check /tmp/page.js)",
+      "Bash(node -e ' *)",
+      "Bash(node --check C:/Users/david/AppData/Local/Temp/claude/C--Users-david-Programovanie-2026-mojeProjekty-skripty-cinema-watcher/c3c7d591-944f-4af4-8ef7-2e31d7ae80f8/scratchpad/page.js)"
     ]
   }
 }

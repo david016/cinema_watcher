@@ -539,16 +539,23 @@ def write_json_out(path: str, current: dict, changes: list, ok: bool = True, err
         totals = previous_doc.get("totals") or {}
         total_free = totals.get("free_bookable", 0)
         sold_out = totals.get("sold_out", 0)
+        wheelchair_only = totals.get("wheelchair_only", 0)
     else:
         screenings = []
         total_free = 0
         sold_out = 0
+        wheelchair_only = 0
         for event_id, ev in sorted(current.items(), key=lambda kv: (kv[1]["date"], kv[1]["time"])):
             free_bookable = bookable_seats(ev)
             if free_bookable:
                 total_free += free_bookable
             if ev.get("sold_out"):
                 sold_out += 1
+            elif free_bookable == 0 and (ev.get("free_seats") or 0) > 0:
+                # Kúpiť sa nedá nič, ale API to za vypredané nepovažuje — ostali
+                # len miesta pre vozík. V praxi to je jediný "vypredaný" stav,
+                # ktorý od Cinema City chodí, preto sa počíta zvlášť.
+                wheelchair_only += 1
             screenings.append({**ev, "event_id": event_id, "seats": describe_seats(ev)})
 
     # História: najnovšie hlásenia prvé, staršie orezané.
@@ -572,6 +579,7 @@ def write_json_out(path: str, current: dict, changes: list, ok: bool = True, err
             "screenings": len(screenings),
             "free_bookable": total_free,
             "sold_out": sold_out,
+            "wheelchair_only": wheelchair_only,
         },
         "screenings": screenings,
         "changes": changes,
