@@ -17,3 +17,7 @@ node_modules/
 # Lokálne behy cez run-local.ps1 — vlastný stav, log a .env, aby si nekolidovali
 # so stavom, ktorý do repa commituje GitHub Actions.
 local/
+
+# Osobné nastavenia Claude Code (platia len na tomto
+  stroji)
+.claude/settings.local.json
