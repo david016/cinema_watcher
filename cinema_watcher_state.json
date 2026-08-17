@@ -889,9 +889,9 @@
     "time": "09:00",
     "auditorium": "IMAX VOLVO",
     "sold_out": false,
-    "availability_ratio": 0.4701,
-    "free_seats": 181,
-    "free_bookable": 175,
+    "availability_ratio": 0.4649,
+    "free_seats": 179,
+    "free_bookable": 173,
     "wheelchair_seats": 6,
     "capacity": 384,
     "booking_link": "https://www.cinemacity.cz/cz/booking-router/launch/233340?lang=cs"
