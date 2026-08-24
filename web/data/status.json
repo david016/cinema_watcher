@@ -1,8 +1,8 @@
 {
-  "generated_at": "2026-08-24T19:32:59+00:00",
+  "generated_at": "2026-08-24T20:34:40+00:00",
   "ok": true,
   "error": null,
-  "last_ok_at": "2026-08-24T19:32:59+00:00",
+  "last_ok_at": "2026-08-24T20:34:40+00:00",
   "config": {
     "cinema_id": "1052",
     "attr": "70-mm",
@@ -11,7 +11,7 @@
   },
   "totals": {
     "screenings": 56,
-    "free_bookable": 1803,
+    "free_bookable": 1793,
     "sold_out": 0,
     "wheelchair_only": 4
   },
@@ -37,14 +37,14 @@
       "time": "12:50",
       "auditorium": "IMAX VOLVO",
       "sold_out": false,
-      "availability_ratio": 0.0208,
-      "free_seats": 8,
-      "free_bookable": 2,
+      "availability_ratio": 0.0234,
+      "free_seats": 9,
+      "free_bookable": 3,
       "wheelchair_seats": 6,
       "capacity": 384,
       "booking_link": "https://www.cinemacity.cz/cz/booking-router/launch/233305?lang=cs",
       "event_id": "233305",
-      "seats": "2 bežných voľných z 384 (+6 pre vozík)"
+      "seats": "3 bežných voľných z 384 (+6 pre vozík)"
     },
     {
       "film": "Odyssea",
@@ -97,14 +97,14 @@
       "time": "12:50",
       "auditorium": "IMAX VOLVO",
       "sold_out": false,
-      "availability_ratio": 0.0416,
-      "free_seats": 16,
-      "free_bookable": 10,
+      "availability_ratio": 0.039,
+      "free_seats": 15,
+      "free_bookable": 9,
       "wheelchair_seats": 6,
       "capacity": 384,
       "booking_link": "https://www.cinemacity.cz/cz/booking-router/launch/233309?lang=cs",
       "event_id": "233309",
-      "seats": "10 bežných voľných z 384 (+6 pre vozík)"
+      "seats": "9 bežných voľných z 384 (+6 pre vozík)"
     },
     {
       "film": "Odyssea",
@@ -172,14 +172,14 @@
       "time": "09:00",
       "auditorium": "IMAX VOLVO",
       "sold_out": false,
-      "availability_ratio": 0.0909,
-      "free_seats": 35,
-      "free_bookable": 29,
+      "availability_ratio": 0.0857,
+      "free_seats": 33,
+      "free_bookable": 27,
       "wheelchair_seats": 6,
       "capacity": 384,
       "booking_link": "https://www.cinemacity.cz/cz/booking-router/launch/233314?lang=cs",
       "event_id": "233314",
-      "seats": "29 bežných voľných z 384 (+6 pre vozík)"
+      "seats": "27 bežných voľných z 384 (+6 pre vozík)"
     },
     {
       "film": "Odyssea",
@@ -187,14 +187,14 @@
       "time": "12:50",
       "auditorium": "IMAX VOLVO",
       "sold_out": false,
-      "availability_ratio": 0.0597,
-      "free_seats": 23,
-      "free_bookable": 17,
+      "availability_ratio": 0.0545,
+      "free_seats": 21,
+      "free_bookable": 15,
       "wheelchair_seats": 6,
       "capacity": 384,
       "booking_link": "https://www.cinemacity.cz/cz/booking-router/launch/233315?lang=cs",
       "event_id": "233315",
-      "seats": "17 bežných voľných z 384 (+6 pre vozík)"
+      "seats": "15 bežných voľných z 384 (+6 pre vozík)"
     },
     {
       "film": "Odyssea",
@@ -217,14 +217,14 @@
       "time": "20:30",
       "auditorium": "IMAX VOLVO",
       "sold_out": false,
-      "availability_ratio": 0.0286,
-      "free_seats": 11,
-      "free_bookable": 5,
+      "availability_ratio": 0.026,
+      "free_seats": 10,
+      "free_bookable": 4,
       "wheelchair_seats": 6,
       "capacity": 384,
       "booking_link": "https://www.cinemacity.cz/cz/booking-router/launch/233317?lang=cs",
       "event_id": "233317",
-      "seats": "5 bežných voľných z 384 (+6 pre vozík)"
+      "seats": "4 bežných voľných z 384 (+6 pre vozík)"
     },
     {
       "film": "Odyssea",
@@ -232,14 +232,14 @@
       "time": "09:00",
       "auditorium": "IMAX VOLVO",
       "sold_out": false,
-      "availability_ratio": 0.0753,
-      "free_seats": 29,
-      "free_bookable": 23,
+      "availability_ratio": 0.0701,
+      "free_seats": 27,
+      "free_bookable": 21,
       "wheelchair_seats": 6,
       "capacity": 384,
       "booking_link": "https://www.cinemacity.cz/cz/booking-router/launch/233319?lang=cs",
       "event_id": "233319",
-      "seats": "23 bežných voľných z 384 (+6 pre vozík)"
+      "seats": "21 bežných voľných z 384 (+6 pre vozík)"
     },
     {
       "film": "Odyssea",
@@ -247,14 +247,14 @@
       "time": "12:50",
       "auditorium": "IMAX VOLVO",
       "sold_out": false,
-      "availability_ratio": 0.026,
-      "free_seats": 10,
-      "free_bookable": 4,
+      "availability_ratio": 0.0208,
+      "free_seats": 8,
+      "free_bookable": 2,
       "wheelchair_seats": 6,
       "capacity": 384,
       "booking_link": "https://www.cinemacity.cz/cz/booking-router/launch/233318?lang=cs",
       "event_id": "233318",
-      "seats": "4 bežných voľných z 384 (+6 pre vozík)"
+      "seats": "2 bežných voľných z 384 (+6 pre vozík)"
     },
     {
       "film": "Odyssea",
@@ -277,14 +277,14 @@
       "time": "20:30",
       "auditorium": "IMAX VOLVO",
       "sold_out": false,
-      "availability_ratio": 0.0442,
-      "free_seats": 17,
-      "free_bookable": 11,
+      "availability_ratio": 0.0364,
+      "free_seats": 14,
+      "free_bookable": 8,
       "wheelchair_seats": 6,
       "capacity": 384,
       "booking_link": "https://www.cinemacity.cz/cz/booking-router/launch/233321?lang=cs",
       "event_id": "233321",
-      "seats": "11 bežných voľných z 384 (+6 pre vozík)"
+      "seats": "8 bežných voľných z 384 (+6 pre vozík)"
     },
     {
       "film": "Odyssea",
@@ -502,14 +502,14 @@
       "time": "09:00",
       "auditorium": "IMAX VOLVO",
       "sold_out": false,
-      "availability_ratio": 0.2623,
-      "free_seats": 101,
-      "free_bookable": 95,
+      "availability_ratio": 0.2597,
+      "free_seats": 100,
+      "free_bookable": 94,
       "wheelchair_seats": 6,
       "capacity": 384,
       "booking_link": "https://www.cinemacity.cz/cz/booking-router/launch/233336?lang=cs",
       "event_id": "233336",
-      "seats": "95 bežných voľných z 384 (+6 pre vozík)"
+      "seats": "94 bežných voľných z 384 (+6 pre vozík)"
     },
     {
       "film": "Odyssea",
@@ -517,14 +517,14 @@
       "time": "12:50",
       "auditorium": "IMAX VOLVO",
       "sold_out": false,
-      "availability_ratio": 0.239,
-      "free_seats": 92,
-      "free_bookable": 86,
+      "availability_ratio": 0.2364,
+      "free_seats": 91,
+      "free_bookable": 85,
       "wheelchair_seats": 6,
       "capacity": 384,
       "booking_link": "https://www.cinemacity.cz/cz/booking-router/launch/233337?lang=cs",
       "event_id": "233337",
-      "seats": "86 bežných voľných z 384 (+6 pre vozík)"
+      "seats": "85 bežných voľných z 384 (+6 pre vozík)"
     },
     {
       "film": "Odyssea",
@@ -757,14 +757,14 @@
       "time": "12:50",
       "auditorium": "IMAX VOLVO",
       "sold_out": false,
-      "availability_ratio": 0.2,
-      "free_seats": 77,
-      "free_bookable": 71,
+      "availability_ratio": 0.2026,
+      "free_seats": 78,
+      "free_bookable": 72,
       "wheelchair_seats": 6,
       "capacity": 384,
       "booking_link": "https://www.cinemacity.cz/cz/booking-router/launch/233353?lang=cs",
       "event_id": "233353",
-      "seats": "71 bežných voľných z 384 (+6 pre vozík)"
+      "seats": "72 bežných voľných z 384 (+6 pre vozík)"
     },
     {
       "film": "Odyssea",
@@ -802,14 +802,14 @@
       "time": "09:00",
       "auditorium": "IMAX VOLVO",
       "sold_out": false,
-      "availability_ratio": 0.2286,
-      "free_seats": 88,
-      "free_bookable": 82,
+      "availability_ratio": 0.2364,
+      "free_seats": 91,
+      "free_bookable": 85,
       "wheelchair_seats": 6,
       "capacity": 384,
       "booking_link": "https://www.cinemacity.cz/cz/booking-router/launch/233356?lang=cs",
       "event_id": "233356",
-      "seats": "82 bežných voľných z 384 (+6 pre vozík)"
+      "seats": "85 bežných voľných z 384 (+6 pre vozík)"
     },
     {
       "film": "Odyssea",
@@ -857,9 +857,99 @@
       "seats": "18 bežných voľných z 384 (+6 pre vozík)"
     }
   ],
-  "changes": [],
-  "last_change_at": "2026-08-24T18:46:09+00:00",
+  "changes": [
+    {
+      "kind": "more",
+      "text": "🎟️ PRIBUDLI VOĽNÉ MIESTA (+1): Odyssea — 2026-08-25 12:50 (sála IMAX VOLVO, 2 -> 3 voľných) -> https://www.cinemacity.cz/cz/booking-router/launch/233305?lang=cs",
+      "event_id": "233305",
+      "film": "Odyssea",
+      "date": "2026-08-25",
+      "time": "12:50",
+      "auditorium": "IMAX VOLVO",
+      "seats": "3 bežných voľných z 384 (+6 pre vozík)",
+      "free_bookable": 3,
+      "booking_link": "https://www.cinemacity.cz/cz/booking-router/launch/233305?lang=cs",
+      "delta": 1,
+      "free_before": 2
+    },
+    {
+      "kind": "more",
+      "text": "🎟️ PRIBUDLI VOĽNÉ MIESTA (+1): Odyssea — 2026-09-07 12:50 (sála IMAX VOLVO, 71 -> 72 voľných) -> https://www.cinemacity.cz/cz/booking-router/launch/233353?lang=cs",
+      "event_id": "233353",
+      "film": "Odyssea",
+      "date": "2026-09-07",
+      "time": "12:50",
+      "auditorium": "IMAX VOLVO",
+      "seats": "72 bežných voľných z 384 (+6 pre vozík)",
+      "free_bookable": 72,
+      "booking_link": "https://www.cinemacity.cz/cz/booking-router/launch/233353?lang=cs",
+      "delta": 1,
+      "free_before": 71
+    },
+    {
+      "kind": "more",
+      "text": "🎟️ PRIBUDLI VOĽNÉ MIESTA (+3): Odyssea — 2026-09-08 09:00 (sála IMAX VOLVO, 82 -> 85 voľných) -> https://www.cinemacity.cz/cz/booking-router/launch/233356?lang=cs",
+      "event_id": "233356",
+      "film": "Odyssea",
+      "date": "2026-09-08",
+      "time": "09:00",
+      "auditorium": "IMAX VOLVO",
+      "seats": "85 bežných voľných z 384 (+6 pre vozík)",
+      "free_bookable": 85,
+      "booking_link": "https://www.cinemacity.cz/cz/booking-router/launch/233356?lang=cs",
+      "delta": 3,
+      "free_before": 82
+    }
+  ],
+  "last_change_at": "2026-08-24T20:34:40+00:00",
   "history": [
+    {
+      "at": "2026-08-24T20:34:40+00:00",
+      "changes": [
+        {
+          "kind": "more",
+          "text": "🎟️ PRIBUDLI VOĽNÉ MIESTA (+1): Odyssea — 2026-08-25 12:50 (sála IMAX VOLVO, 2 -> 3 voľných) -> https://www.cinemacity.cz/cz/booking-router/launch/233305?lang=cs",
+          "event_id": "233305",
+          "film": "Odyssea",
+          "date": "2026-08-25",
+          "time": "12:50",
+          "auditorium": "IMAX VOLVO",
+          "seats": "3 bežných voľných z 384 (+6 pre vozík)",
+          "free_bookable": 3,
+          "booking_link": "https://www.cinemacity.cz/cz/booking-router/launch/233305?lang=cs",
+          "delta": 1,
+          "free_before": 2
+        },
+        {
+          "kind": "more",
+          "text": "🎟️ PRIBUDLI VOĽNÉ MIESTA (+1): Odyssea — 2026-09-07 12:50 (sála IMAX VOLVO, 71 -> 72 voľných) -> https://www.cinemacity.cz/cz/booking-router/launch/233353?lang=cs",
+          "event_id": "233353",
+          "film": "Odyssea",
+          "date": "2026-09-07",
+          "time": "12:50",
+          "auditorium": "IMAX VOLVO",
+          "seats": "72 bežných voľných z 384 (+6 pre vozík)",
+          "free_bookable": 72,
+          "booking_link": "https://www.cinemacity.cz/cz/booking-router/launch/233353?lang=cs",
+          "delta": 1,
+          "free_before": 71
+        },
+        {
+          "kind": "more",
+          "text": "🎟️ PRIBUDLI VOĽNÉ MIESTA (+3): Odyssea — 2026-09-08 09:00 (sála IMAX VOLVO, 82 -> 85 voľných) -> https://www.cinemacity.cz/cz/booking-router/launch/233356?lang=cs",
+          "event_id": "233356",
+          "film": "Odyssea",
+          "date": "2026-09-08",
+          "time": "09:00",
+          "auditorium": "IMAX VOLVO",
+          "seats": "85 bežných voľných z 384 (+6 pre vozík)",
+          "free_bookable": 85,
+          "booking_link": "https://www.cinemacity.cz/cz/booking-router/launch/233356?lang=cs",
+          "delta": 3,
+          "free_before": 82
+        }
+      ]
+    },
     {
       "at": "2026-08-24T18:46:09+00:00",
       "changes": [
@@ -2222,25 +2312,6 @@
           "seats": "0 bežných voľných (ostali len miesta pre vozík: 6)",
           "free_bookable": 0,
           "booking_link": "https://www.cinemacity.cz/cz/booking-router/launch/224513?lang=cs"
-        }
-      ]
-    },
-    {
-      "at": "2026-08-21T14:39:17+00:00",
-      "changes": [
-        {
-          "kind": "more",
-          "text": "🎟️ PRIBUDLI VOĽNÉ MIESTA (+2): Odyssea — 2026-08-26 16:40 (sála IMAX VOLVO, 7 -> 9 voľných) -> https://www.cinemacity.cz/cz/booking-router/launch/233310?lang=cs",
-          "event_id": "233310",
-          "film": "Odyssea",
-          "date": "2026-08-26",
-          "time": "16:40",
-          "auditorium": "IMAX VOLVO",
-          "seats": "9 bežných voľných z 384 (+6 pre vozík)",
-          "free_bookable": 9,
-          "booking_link": "https://www.cinemacity.cz/cz/booking-router/launch/233310?lang=cs",
-          "delta": 2,
-          "free_before": 7
         }
       ]
     }
