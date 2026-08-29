@@ -47,10 +47,13 @@ on:
         required: false
         type: string
       mail_on:
+        # DOČASNE VYPNUTÉ: default je "never", takže ani ručné spustenie
+        # nepošle e-mail. Späť sa zapína prepnutím na "tickets" (pozri aj
+        # krok "Kontrola premietaní" nižšie a netlify/functions/check.mjs).
         description: "Kedy poslať e-mail"
         required: false
         type: choice
-        default: tickets
+        default: never
         options: [tickets, all, never]
       test_email:
         description: "Poslať len skúšobný e-mail (overenie SMTP) a skončiť"
@@ -110,12 +113,16 @@ jobs:
         if: ${{ inputs.test_email }}
         run: python cinema_watcher.py --test-email --log-file ""
 
+      # DOČASNE VYPNUTÉ POSIELANIE E-MAILOV: posledný člen reťazca je "never",
+      # takže keď nie je nastavená premenná CINEMA_MAIL_ON ani vstup pri ručnom
+      # spustení, kontrola bežne zbehne a web sa aktualizuje, ale e-mail
+      # neodíde. Zapnutie späť = zmeniť 'never' na 'tickets'.
       - name: Kontrola premietaní
         if: ${{ !inputs.test_email }}
         run: |
           python cinema_watcher.py \
             --json-out "$DATA_FILE" \
-            --mail-on "${{ inputs.mail_on || vars.CINEMA_MAIL_ON || 'tickets' }}" \
+            --mail-on "${{ inputs.mail_on || vars.CINEMA_MAIL_ON || 'never' }}" \
             --log-file ""
 
       # Stav MUSÍ prežiť medzi behmi — bez neho by každý beh vyzeral ako prvý

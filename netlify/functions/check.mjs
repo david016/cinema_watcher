@@ -47,7 +47,9 @@ export default async (req) => {
     body: JSON.stringify({
       ref: cfg.branch,
       inputs: {
-        mail_on: ["tickets", "all", "never"].includes(body.mail_on) ? body.mail_on : "tickets",
+        // DOČASNE VYPNUTÉ: default je "never", aby ani kontrola spustená
+        // zo stránky neposlala e-mail. Zapnutie späť = "tickets".
+        mail_on: ["tickets", "all", "never"].includes(body.mail_on) ? body.mail_on : "never",
       },
     }),
   });
