@@ -1,8 +1,8 @@
 {
-  "generated_at": "2026-10-14T21:25:43+00:00",
+  "generated_at": "2026-10-15T00:21:08+00:00",
   "ok": true,
   "error": null,
-  "last_ok_at": "2026-10-14T21:25:43+00:00",
+  "last_ok_at": "2026-10-15T00:21:08+00:00",
   "config": {
     "cinema_id": "1052",
     "attr": "70-mm",
@@ -11,7 +11,7 @@
   },
   "totals": {
     "screenings": 9,
-    "free_bookable": 2332,
+    "free_bookable": 2320,
     "sold_out": 0,
     "wheelchair_only": 0
   },
@@ -22,14 +22,14 @@
       "time": "14:00",
       "auditorium": "IMAX VOLVO",
       "sold_out": false,
-      "availability_ratio": 0.8571,
-      "free_seats": 329,
-      "free_bookable": 323,
+      "availability_ratio": 0.8442,
+      "free_seats": 324,
+      "free_bookable": 318,
       "wheelchair_seats": 6,
       "capacity": 384,
       "booking_link": "https://www.cinemacity.cz/cz/booking-router/launch/264134?lang=cs",
       "event_id": "264134",
-      "seats": "323 bežných voľných z 384 (+6 pre vozík)"
+      "seats": "318 bežných voľných z 384 (+6 pre vozík)"
     },
     {
       "film": "Odyssea",
@@ -37,14 +37,14 @@
       "time": "14:00",
       "auditorium": "IMAX VOLVO",
       "sold_out": false,
-      "availability_ratio": 0.7299,
-      "free_seats": 280,
-      "free_bookable": 274,
+      "availability_ratio": 0.7273,
+      "free_seats": 279,
+      "free_bookable": 273,
       "wheelchair_seats": 6,
       "capacity": 384,
       "booking_link": "https://www.cinemacity.cz/cz/booking-router/launch/264430?lang=cs",
       "event_id": "264430",
-      "seats": "274 bežných voľných z 384 (+6 pre vozík)"
+      "seats": "273 bežných voľných z 384 (+6 pre vozík)"
     },
     {
       "film": "Odyssea",
@@ -67,14 +67,14 @@
       "time": "13:40",
       "auditorium": "IMAX VOLVO",
       "sold_out": false,
-      "availability_ratio": 0.4831,
-      "free_seats": 186,
-      "free_bookable": 180,
+      "availability_ratio": 0.4805,
+      "free_seats": 185,
+      "free_bookable": 179,
       "wheelchair_seats": 6,
       "capacity": 384,
       "booking_link": "https://www.cinemacity.cz/cz/booking-router/launch/265589?lang=cs",
       "event_id": "265589",
-      "seats": "180 bežných voľných z 384 (+6 pre vozík)"
+      "seats": "179 bežných voľných z 384 (+6 pre vozík)"
     },
     {
       "film": "Odyssea",
@@ -112,14 +112,14 @@
       "time": "14:00",
       "auditorium": "IMAX VOLVO",
       "sold_out": false,
-      "availability_ratio": 0.8156,
-      "free_seats": 313,
-      "free_bookable": 307,
+      "availability_ratio": 0.8104,
+      "free_seats": 311,
+      "free_bookable": 305,
       "wheelchair_seats": 6,
       "capacity": 384,
       "booking_link": "https://www.cinemacity.cz/cz/booking-router/launch/264431?lang=cs",
       "event_id": "264431",
-      "seats": "307 bežných voľných z 384 (+6 pre vozík)"
+      "seats": "305 bežných voľných z 384 (+6 pre vozík)"
     },
     {
       "film": "Odyssea",
@@ -142,30 +142,17 @@
       "time": "14:00",
       "auditorium": "IMAX VOLVO",
       "sold_out": false,
-      "availability_ratio": 0.9143,
-      "free_seats": 351,
-      "free_bookable": 345,
+      "availability_ratio": 0.9065,
+      "free_seats": 348,
+      "free_bookable": 342,
       "wheelchair_seats": 6,
       "capacity": 384,
       "booking_link": "https://www.cinemacity.cz/cz/booking-router/launch/264433?lang=cs",
       "event_id": "264433",
-      "seats": "345 bežných voľných z 384 (+6 pre vozík)"
+      "seats": "342 bežných voľných z 384 (+6 pre vozík)"
     }
   ],
-  "changes": [
-    {
-      "kind": "removed",
-      "text": "❌ ZRUŠENÝ TERMÍN: Odyssea — 2026-10-14 20:30 (sála IMAX VOLVO)",
-      "event_id": "263360",
-      "film": "Odyssea",
-      "date": "2026-10-14",
-      "time": "20:30",
-      "auditorium": "IMAX VOLVO",
-      "seats": "93 bežných voľných z 384 (+6 pre vozík)",
-      "free_bookable": 93,
-      "booking_link": "https://www.cinemacity.cz/cz/booking-router/launch/263360?lang=cs"
-    }
-  ],
+  "changes": [],
   "last_change_at": "2026-10-14T21:25:43+00:00",
   "history": [
     {
