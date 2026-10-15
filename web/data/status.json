@@ -1,8 +1,8 @@
 {
-  "generated_at": "2026-10-15T20:12:48+00:00",
+  "generated_at": "2026-10-15T23:35:32+00:00",
   "ok": true,
   "error": null,
-  "last_ok_at": "2026-10-15T20:12:48+00:00",
+  "last_ok_at": "2026-10-15T23:35:32+00:00",
   "config": {
     "cinema_id": "1052",
     "attr": "70-mm",
@@ -11,7 +11,7 @@
   },
   "totals": {
     "screenings": 8,
-    "free_bookable": 1805,
+    "free_bookable": 1779,
     "sold_out": 0,
     "wheelchair_only": 0
   },
@@ -22,14 +22,14 @@
       "time": "14:00",
       "auditorium": "IMAX VOLVO",
       "sold_out": false,
-      "availability_ratio": 0.6779,
-      "free_seats": 260,
-      "free_bookable": 254,
+      "availability_ratio": 0.6571,
+      "free_seats": 252,
+      "free_bookable": 246,
       "wheelchair_seats": 6,
       "capacity": 384,
       "booking_link": "https://www.cinemacity.cz/cz/booking-router/launch/264430?lang=cs",
       "event_id": "264430",
-      "seats": "254 bežných voľných z 384 (+6 pre vozík)"
+      "seats": "246 bežných voľných z 384 (+6 pre vozík)"
     },
     {
       "film": "Odyssea",
@@ -37,14 +37,14 @@
       "time": "10:00",
       "auditorium": "IMAX VOLVO",
       "sold_out": false,
-      "availability_ratio": 0.5091,
-      "free_seats": 195,
-      "free_bookable": 189,
+      "availability_ratio": 0.4909,
+      "free_seats": 189,
+      "free_bookable": 183,
       "wheelchair_seats": 6,
       "capacity": 384,
       "booking_link": "https://www.cinemacity.cz/cz/booking-router/launch/265544?lang=cs",
       "event_id": "265544",
-      "seats": "189 bežných voľných z 384 (+6 pre vozík)"
+      "seats": "183 bežných voľných z 384 (+6 pre vozík)"
     },
     {
       "film": "Odyssea",
@@ -52,14 +52,14 @@
       "time": "13:40",
       "auditorium": "IMAX VOLVO",
       "sold_out": false,
-      "availability_ratio": 0.4052,
-      "free_seats": 156,
-      "free_bookable": 150,
+      "availability_ratio": 0.4,
+      "free_seats": 154,
+      "free_bookable": 148,
       "wheelchair_seats": 6,
       "capacity": 384,
       "booking_link": "https://www.cinemacity.cz/cz/booking-router/launch/265589?lang=cs",
       "event_id": "265589",
-      "seats": "150 bežných voľných z 384 (+6 pre vozík)"
+      "seats": "148 bežných voľných z 384 (+6 pre vozík)"
     },
     {
       "film": "Odyssea",
@@ -67,14 +67,14 @@
       "time": "10:00",
       "auditorium": "IMAX VOLVO",
       "sold_out": false,
-      "availability_ratio": 0.4623,
-      "free_seats": 178,
-      "free_bookable": 172,
+      "availability_ratio": 0.4597,
+      "free_seats": 177,
+      "free_bookable": 171,
       "wheelchair_seats": 6,
       "capacity": 384,
       "booking_link": "https://www.cinemacity.cz/cz/booking-router/launch/265655?lang=cs",
       "event_id": "265655",
-      "seats": "172 bežných voľných z 384 (+6 pre vozík)"
+      "seats": "171 bežných voľných z 384 (+6 pre vozík)"
     },
     {
       "film": "Odyssea",
@@ -97,14 +97,14 @@
       "time": "14:00",
       "auditorium": "IMAX VOLVO",
       "sold_out": false,
-      "availability_ratio": 0.7558,
-      "free_seats": 290,
-      "free_bookable": 284,
+      "availability_ratio": 0.7455,
+      "free_seats": 286,
+      "free_bookable": 280,
       "wheelchair_seats": 6,
       "capacity": 384,
       "booking_link": "https://www.cinemacity.cz/cz/booking-router/launch/264431?lang=cs",
       "event_id": "264431",
-      "seats": "284 bežných voľných z 384 (+6 pre vozík)"
+      "seats": "280 bežných voľných z 384 (+6 pre vozík)"
     },
     {
       "film": "Odyssea",
@@ -127,14 +127,14 @@
       "time": "14:00",
       "auditorium": "IMAX VOLVO",
       "sold_out": false,
-      "availability_ratio": 0.8753,
-      "free_seats": 336,
-      "free_bookable": 330,
+      "availability_ratio": 0.8623,
+      "free_seats": 331,
+      "free_bookable": 325,
       "wheelchair_seats": 6,
       "capacity": 384,
       "booking_link": "https://www.cinemacity.cz/cz/booking-router/launch/264433?lang=cs",
       "event_id": "264433",
-      "seats": "330 bežných voľných z 384 (+6 pre vozík)"
+      "seats": "325 bežných voľných z 384 (+6 pre vozík)"
     }
   ],
   "changes": [],
