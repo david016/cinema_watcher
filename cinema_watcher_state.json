@@ -1,15 +1,1 @@
-{
-  "276175": {
-    "film": "Odyssea",
-    "date": "2026-11-03",
-    "time": "14:00",
-    "auditorium": "IMAX VOLVO",
-    "sold_out": false,
-    "availability_ratio": 0.6987,
-    "free_seats": 268,
-    "free_bookable": 262,
-    "wheelchair_seats": 6,
-    "capacity": 384,
-    "booking_link": "https://www.cinemacity.cz/cz/booking-router/launch/276175?lang=cs"
-  }
-}
+{}
