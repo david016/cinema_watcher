@@ -1,8 +1,8 @@
 {
-  "generated_at": "2026-11-03T18:17:24+00:00",
+  "generated_at": "2026-11-03T23:53:34+00:00",
   "ok": true,
   "error": null,
-  "last_ok_at": "2026-11-03T18:17:24+00:00",
+  "last_ok_at": "2026-11-03T23:53:34+00:00",
   "config": {
     "cinema_id": "1052",
     "attr": "70-mm",
@@ -16,20 +16,7 @@
     "wheelchair_only": 0
   },
   "screenings": [],
-  "changes": [
-    {
-      "kind": "removed",
-      "text": "❌ ZRUŠENÝ TERMÍN: Odyssea — 2026-11-03 14:00 (sála IMAX VOLVO)",
-      "event_id": "276175",
-      "film": "Odyssea",
-      "date": "2026-11-03",
-      "time": "14:00",
-      "auditorium": "IMAX VOLVO",
-      "seats": "262 bežných voľných z 384 (+6 pre vozík)",
-      "free_bookable": 262,
-      "booking_link": "https://www.cinemacity.cz/cz/booking-router/launch/276175?lang=cs"
-    }
-  ],
+  "changes": [],
   "last_change_at": "2026-11-03T18:17:24+00:00",
   "history": [
     {
